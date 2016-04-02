@@ -10,3 +10,28 @@ The Wt Framework is using Boost::asio to handle connections. In Go and Erlang, t
 I don't know :)
 
 The valente is based on Nitrogen ideas.
+
+
+## Installing
+
+To start using valente, install Go and run go get:
+
+```bash
+$ go get github.com/trumae/valente/...
+```
+
+This will retrieve the library and install the valente command line utility into your $GOBIN path.
+
+## How to use 
+
+```bash
+$ valente -cmd create -app appsample
+$ cd appsample
+$ go get
+$ go build
+$ ./appsample
+```
+
+Access http://localhost:8000/ with your browser for boilerplate demo.
+
+
