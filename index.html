@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Valente by trumae</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/trumae/valente">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/trumae/valente/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/trumae/valente/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Valente</h1>
+          <p>websocket for golang webapp</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/trumae">trumae</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="valente---websocket-for-golang-webapp" class="anchor" href="#valente---websocket-for-golang-webapp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>valente - websocket for golang webapp</h1>
+
+<p>valente is an experiment with Golang webapp using WebSockets. There are similar solutions in another languages/platform:</p>
+
+<ul>
+<li>The Wt WebFramework has an experimental features with all comunications between server and browser using websockets. </li>
+<li>N2O and Nitrogen are frameworks with that feature coded in Erlang. </li>
+</ul>
+
+<p>The use of asynchronism is mandatory for this solutions. Traditional threads aren't viable, due to high memory consumed for each connection. 
+The Wt Framework is using Boost::asio to handle connections. In Go and Erlang, the languages features should make that scheme simple and scalable. 
+I don't know :)</p>
+
+<p>The valente is based on Nitrogen ideas.</p>
+
+<h2>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing</h2>
+
+<p>To start using valente, install Go and run go get:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ go get github.com/trumae/valente/...</pre></div>
+
+<p>This will retrieve the library and install the valente command line utility into your $GOBIN path.</p>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
+
+<div class="highlight highlight-source-shell"><pre>$ valente -cmd create -app appsample
+$ <span class="pl-c1">cd</span> appsample
+$ go get
+$ go build
+$ ./appsample</pre></div>
+
+<p>Access http://localhost:8000/ with your browser for boilerplate demo.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
