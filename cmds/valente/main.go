@@ -191,7 +191,6 @@ func createApp(name string) {
 	copyDir(pathToValenteDataPublic, path.Join(apppath, "public"))
 	copyDir(pathToValenteDataForms, path.Join(apppath, "forms"))
 
-	log.Println(apppath, appsrcpath, pathToValenteDataForms)
 	packageForms := path.Join(apppath[len(appsrcpath)+1:], "forms")
 
 	tmpl, err := template.New("forms").Parse(tplMainGo)
@@ -249,6 +248,7 @@ func (app *App) Initialize() {
     log.Println("App Initialize")
 
     app.AddForm("login", forms.FormLogin{})
+    app.AddForm("home", forms.FormHome{})
 
     app.GoTo("login")
 }
