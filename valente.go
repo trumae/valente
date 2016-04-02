@@ -65,8 +65,12 @@ type App struct {
 //GoTo replace the current form into app
 func (app *App) GoTo(formName string) error {
 	log.Println("App goto", formName)
-	form := app.Forms[formName]
-	app.CurrentForm = form.Initialize(app.WS)
+	form, present := app.Forms[formName]
+	if present {
+		app.CurrentForm = form.Initialize(app.WS)
+	} else {
+		log.Println("[ERROR] Form not registred", formName)
+	}
 	return nil
 }
 
