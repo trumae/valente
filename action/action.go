@@ -101,7 +101,7 @@ func Wire(ws *websocket.Conn, target, event, act string) error {
 }
 
 func SendEvent(ws *websocket.Conn, event string) error {
-	js := fmt.Sprintf("ws.send('%s');", event)
+	js := fmt.Sprintf("sendEvent('%s');", event)
 	err := websocket.Message.Send(ws, js)
 	if err != nil {
 		return err

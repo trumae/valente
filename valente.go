@@ -1,13 +1,22 @@
 package valente
 
 import (
+	"errors"
 	"log"
 
 	"golang.org/x/net/websocket"
 )
 
+const (
+	endofmessage = "___ENDOFMESSAGE___"
+)
+
+var (
+	ProtocolError = errors.New("Protocol Error")
+)
+
 //HandlerFunc is a function of handle an event received into websocket.Conn
-type HandlerFunc func(*websocket.Conn, *App)
+type HandlerFunc func(*websocket.Conn, *App, []string)
 
 //Form represents the unit of user interaction
 type Form interface {
@@ -32,18 +41,30 @@ func (form FormImpl) AddEventHandler(evt string, f HandlerFunc) Form {
 
 //Run execs the form
 func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
-	msg := ""
-	err := websocket.Message.Receive(ws, &msg)
-	if err != nil {
-		log.Println("Error on WS Receive", err)
-		return err
+	msgs := []string{}
+	for {
+		msg := ""
+		err := websocket.Message.Receive(ws, &msg)
+		if err != nil {
+			log.Println("Error on WS Receive", err)
+			return err
+		}
+		if msg == endofmessage {
+			break
+		} else {
+			msgs = append(msgs, msg)
+		}
 	}
-	println(msg, form.trans)
-	f, present := form.trans[msg]
+	println(msgs)
+	if len(msgs) < 1 {
+		return ProtocolError
+	}
+
+	f, present := form.trans[msgs[0]]
 	if present {
-		f(ws, app)
+		f(ws, app, msgs)
 	} else {
-		log.Println("Evt not found", msg)
+		log.Println("Evt not found", msgs[0])
 	}
 	return nil
 }

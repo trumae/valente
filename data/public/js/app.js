@@ -1,7 +1,9 @@
 var ws;
 
 function sendEvent( evt ) {
-    ws.send(evt);
+  for(var i=0; i < arguments.length; i++)
+     ws.send(arguments[i]);
+  ws.send("___ENDOFMESSAGE___")
 }
 
 function createWS() {
