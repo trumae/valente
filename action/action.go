@@ -99,3 +99,23 @@ func Get(ws *websocket.Conn, target string) (string, error) {
 func Wire(ws *websocket.Conn, target, event, act string) error {
 	return errNotImplemented
 }
+
+func SendEvent(ws *websocket.Conn, event string) error {
+	js := fmt.Sprintf("ws.send('%s');", event)
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func Alert(ws *websocket.Conn, message string) error {
+	js := fmt.Sprintf("alert('%s');", message)
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
