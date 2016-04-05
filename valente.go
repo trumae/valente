@@ -20,18 +20,18 @@ type Form interface {
 
 //FormImpl its a simple Form
 type FormImpl struct {
-	trans map[string]HandlerFunc
-	app   *App
+	trans  map[string]HandlerFunc
+	RefApp *App
 }
 
 //App return the app reference
 func (form FormImpl) App() *App {
-	return form.app
+	return form.RefApp
 }
 
 //SetApp set the app reference
 func (form FormImpl) SetApp(a *App) {
-	form.app = a
+	form.RefApp = a
 }
 
 //AddEventHandler add an f function to handle evt event
