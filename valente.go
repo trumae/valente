@@ -43,7 +43,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 	if present {
 		f(ws, app)
 	} else {
-		log.Println("Evt not found")
+		log.Println("Evt not found", msg)
 	}
 	return nil
 }
