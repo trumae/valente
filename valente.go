@@ -92,6 +92,7 @@ func (app *App) Initialize() {
 
 //AddForm add a new form to App
 func (app *App) AddForm(name string, f Form) {
+	log.Println("AddForm", name, f)
 	if app.Forms == nil {
 		app.Forms = map[string]Form{}
 	}
