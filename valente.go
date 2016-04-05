@@ -14,24 +14,11 @@ type Form interface {
 	AddEventHandler(evt string, f HandlerFunc) Form
 	Run(ws *websocket.Conn, app *App) error
 	Initialize(ws *websocket.Conn) Form
-	App() *App
-	SetApp(app *App)
 }
 
 //FormImpl its a simple Form
 type FormImpl struct {
-	trans  map[string]HandlerFunc
-	RefApp *App
-}
-
-//App return the app reference
-func (form FormImpl) App() *App {
-	return form.RefApp
-}
-
-//SetApp set the app reference
-func (form FormImpl) SetApp(a *App) {
-	form.RefApp = a
+	trans map[string]HandlerFunc
 }
 
 //AddEventHandler add an f function to handle evt event
@@ -109,6 +96,5 @@ func (app *App) AddForm(name string, f Form) {
 		app.Forms = map[string]Form{}
 	}
 
-	f.SetApp(app)
 	app.Forms[name] = f
 }
