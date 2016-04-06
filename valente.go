@@ -3,6 +3,9 @@ package valente
 import (
 	"errors"
 	"log"
+	"time"
+
+	"github.com/trumae/valente/action"
 
 	"golang.org/x/net/websocket"
 )
@@ -98,6 +101,17 @@ func (app *App) GoTo(formName string) error {
 //Run handle events
 func (app *App) Run() {
 	app.Data = map[string]interface{}{}
+	go func() {
+		c := time.Tick(10 * time.Second)
+		for _ = range c {
+			err := action.Exec(app.WS, "1 == 1;")
+			if err != nil {
+				log.Println("Error in connection probe", err)
+				return
+			}
+		}
+	}()
+
 	for {
 		err := app.CurrentForm.Run(app.WS, app)
 		if err != nil {
