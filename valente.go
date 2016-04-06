@@ -55,7 +55,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 			msgs = append(msgs, msg)
 		}
 	}
-	println(msgs)
+	println("msgs = ", msgs)
 	if len(msgs) < 1 {
 		return ProtocolError
 	}
