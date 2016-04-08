@@ -61,6 +61,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 	}
 	log.Printf("currentForm = %v msgs = %v\n", app.CurrentForm, msgs)
 	if len(msgs) < 1 {
+		log.Println("Protocol error len(msgs) < 1", msgs)
 		return ProtocolError
 	}
 
@@ -126,7 +127,8 @@ func (app *App) Run() {
 	for {
 		err := app.CurrentForm.Run(app.WS, app)
 		if err != nil {
-			return
+			log.Println(err)
+			continue
 		}
 	}
 }
