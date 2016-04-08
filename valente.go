@@ -26,7 +26,7 @@ type Form interface {
 	AddEventHandler(evt string, f HandlerFunc) Form
 	Run(ws *websocket.Conn, app *App) error
 	Initialize(ws *websocket.Conn) Form
-	Render(ws *websocket.Conn, params []string) error
+	Render(ws *websocket.Conn, app *App, params []string) error
 }
 
 //FormImpl its a simple Form
@@ -79,7 +79,7 @@ func (form FormImpl) Initialize(ws *websocket.Conn) Form {
 	return form
 }
 
-func (form FormImpl) Render(ws *websocket.Conn, params []string) error {
+func (form FormImpl) Render(ws *websocket.Conn, app *App, params []string) error {
 	log.Println("FormImpl Render")
 	return nil
 }
@@ -98,7 +98,10 @@ func (app *App) GoTo(formName string, params []string) error {
 	form, present := app.Forms[formName]
 	if present {
 		app.CurrentForm = form.Initialize(app.WS)
-		form.Render(app.WS, params)
+		err := form.Render(app.WS, app, params)
+		if err != nil {
+			log.Println("Error on goto", err)
+		}
 		action.UnblockUI(app.WS)
 	} else {
 		log.Println("[ERROR] Form not registred", formName)
