@@ -27,7 +27,7 @@ type FormLogin struct {
 	valente.FormImpl
 }
 
-func loginOk(ws *websocket.Conn, app *valente.App) {
+func loginOk(ws *websocket.Conn, app *valente.App, params []string) {
 	log.Println("Handling loginOk")
 
 	user, err := action.Get(ws, "user")

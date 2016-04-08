@@ -3,6 +3,7 @@ package action
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 
 	"golang.org/x/net/websocket"
@@ -118,4 +119,20 @@ func Alert(ws *websocket.Conn, message string) error {
 	}
 
 	return nil
+}
+
+//BlockUI block page interaction
+func BlockUI(ws *websocket.Conn) {
+	Exec(ws, "$.blockUI();ws.send('blocked');")
+
+	ret := ""
+	err := websocket.Message.Receive(ws, &ret)
+	if err != nil {
+		log.Println("ERROR blockUI", err)
+	}
+}
+
+//UnblockUI block page interaction
+func UnblockUI(ws *websocket.Conn) {
+	Exec(ws, "$.unblockUI();")
 }

@@ -26,6 +26,7 @@ type Form interface {
 	AddEventHandler(evt string, f HandlerFunc) Form
 	Run(ws *websocket.Conn, app *App) error
 	Initialize(ws *websocket.Conn) Form
+	Render(ws *websocket.Conn, params []string) error
 }
 
 //FormImpl its a simple Form
@@ -78,6 +79,11 @@ func (form FormImpl) Initialize(ws *websocket.Conn) Form {
 	return form
 }
 
+func (form FormImpl) Render(ws *websocket.Conn, params []string) error {
+	log.Println("FormImpl Render")
+	return nil
+}
+
 //App is a Web Application representation
 type App struct {
 	WS          *websocket.Conn
@@ -87,11 +93,13 @@ type App struct {
 }
 
 //GoTo replace the current form into app
-func (app *App) GoTo(formName string) error {
+func (app *App) GoTo(formName string, params []string) error {
 	log.Println("App goto", formName)
 	form, present := app.Forms[formName]
 	if present {
 		app.CurrentForm = form.Initialize(app.WS)
+		form.Render(app.WS, params)
+		action.UnblockUI(app.WS)
 	} else {
 		log.Println("[ERROR] Form not registred", formName)
 	}
