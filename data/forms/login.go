@@ -10,6 +10,10 @@ import (
 
 const htmlForm = `
 <h3>Login</h3>
+<p>
+User: admin<br/>
+Password: admin
+</p>
 <form>	
 
    <label for="text-basic">User:</label>
