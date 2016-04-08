@@ -250,7 +250,7 @@ func (app *App) Initialize() {
     app.AddForm("login", forms.FormLogin{})
     app.AddForm("home", forms.FormHome{})
 
-    app.GoTo("login")
+    app.GoTo("login", nil)
 }
 
 func main() {
@@ -269,6 +269,7 @@ func main() {
        app.Run()
     })))
 
+		log.Println("Server running")
     e.Run(standard.New(":8000"))
 }
 

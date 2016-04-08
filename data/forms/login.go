@@ -42,7 +42,7 @@ func loginOk(ws *websocket.Conn, app *valente.App, params []string) {
 
 	if user == "admin" && pass == "admin" {
 		action.Html(ws, "loginName", "admin")
-		app.GoTo("home")
+		app.GoTo("home", nil)
 	}
 }
 
