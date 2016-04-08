@@ -16,6 +16,7 @@ const (
 
 var (
 	ProtocolError = errors.New("Protocol Error")
+	EOFWSError    = errors.New("Protocol Error")
 )
 
 //HandlerFunc is a function of handle an event received into websocket.Conn
@@ -51,7 +52,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 		err := websocket.Message.Receive(ws, &msg)
 		if err != nil {
 			log.Println("Error on WS Receive", err)
-			return err
+			return EOFWSError
 		}
 		if msg == endofmessage {
 			break
@@ -128,7 +129,14 @@ func (app *App) Run() {
 		err := app.CurrentForm.Run(app.WS, app)
 		if err != nil {
 			log.Println(err)
-			continue
+			switch {
+			case err == ProtocolError:
+				continue
+			case err == EOFWSError:
+				return
+			default:
+				continue
+			}
 		}
 	}
 }
