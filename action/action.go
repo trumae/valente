@@ -17,11 +17,6 @@ func Exec(ws *websocket.Conn, js string) error {
 	return websocket.Message.Send(ws, js)
 }
 
-//Set update a form element (textbox, dropdown, checkbox, etc) to set text value of TargetID.
-func Set(ws *websocket.Conn, target, value string) error {
-	return errNotImplemented
-}
-
 //Enable the target form field or button.
 func Enable(ws *websocket.Conn, target string) error {
 	return errNotImplemented
@@ -76,6 +71,16 @@ func InsertAfter(ws *websocket.Conn, target, content string) error {
 //Redirect to url
 func Redirect(ws *websocket.Conn, url string) error {
 	return errNotImplemented
+}
+
+//Set update a form element (textbox, dropdown, checkbox, etc) to set text value of TargetID.
+func Set(ws *websocket.Conn, target, value string) error {
+	js := fmt.Sprintf("ws.send($('#%s').val('%s'));", target, value)
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 //Get content of form element
