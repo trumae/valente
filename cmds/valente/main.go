@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"flag"
 	"fmt"
 	"html/template"
 	"io"
@@ -10,6 +9,8 @@ import (
 	"os"
 	path "path/filepath"
 	"strings"
+
+	"github.com/codegangsta/cli"
 )
 
 var (
@@ -208,19 +209,53 @@ func createApp(name string) {
 }
 
 func main() {
-	flag.StringVar(&cmd, "cmd", "", "task: (create)")
-	flag.StringVar(&appname, "app", "app", "name of app")
+	app := cli.NewApp()
+	app.Name = "valente"
+	app.Usage = "Tool for easy use of valente websocket micro-framework"
 
-	flag.Parse()
-	log.SetFlags(0)
-
-	switch cmd {
-	case "create":
-		log.Println("Creating app ", appname)
-		createApp(appname)
-	default:
-		flag.Usage()
+	app.Commands = []cli.Command{
+		{
+			Name:    "new",
+			Aliases: []string{"n"},
+			Usage:   "create a new project",
+			Action: func(c *cli.Context) {
+				appname := c.Args().First()
+				log.Println("Creating app ", appname)
+				createApp(appname)
+			},
+		},
+		/*		{
+					Name:    "complete",
+					Aliases: []string{"c"},
+					Usage:   "complete a task on the list",
+					Action: func(c *cli.Context) {
+						println("completed task: ", c.Args().First())
+					},
+				},
+				{
+					Name:    "template",
+					Aliases: []string{"r"},
+					Usage:   "options for task templates",
+					Subcommands: []cli.Command{
+						{
+							Name:  "add",
+							Usage: "add a new template",
+							Action: func(c *cli.Context) {
+								println("new task template: ", c.Args().First())
+							},
+						},
+						{
+							Name:  "remove",
+							Usage: "remove an existing template",
+							Action: func(c *cli.Context) {
+								println("removed task template: ", c.Args().First())
+							},
+						},
+					},
+				},*/
 	}
+
+	app.Run(os.Args)
 }
 
 const tplMainGo = `package main
