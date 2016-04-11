@@ -75,7 +75,7 @@ func Redirect(ws *websocket.Conn, url string) error {
 
 //Set update a form element (textbox, dropdown, checkbox, etc) to set text value of TargetID.
 func Set(ws *websocket.Conn, target, value string) error {
-	js := fmt.Sprintf("ws.send($('#%s').val('%s'));", target, value)
+	js := fmt.Sprintf("$('#%s').val('%s');", target, value)
 	err := websocket.Message.Send(ws, js)
 	if err != nil {
 		return err
