@@ -13,11 +13,6 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-var (
-	cmd     string
-	appname string
-)
-
 func copyFile(source string, dest string) (err error) {
 	sourcefile, err := os.Open(source)
 	if err != nil {
@@ -209,8 +204,11 @@ func createApp(name string) {
 }
 
 func main() {
+	trumae := cli.Author{Name: "Trumae da Ilha", Email: "trumae@gmail.com"}
 	app := cli.NewApp()
 	app.Name = "valente"
+	app.Version = "0.0.1"
+	app.Authors = []cli.Author{trumae}
 	app.Usage = "Tool for easy use of valente websocket micro-framework"
 
 	app.Commands = []cli.Command{
