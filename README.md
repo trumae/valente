@@ -25,7 +25,7 @@ This will retrieve the library and install the valente command line utility into
 ## How to use 
 
 ```bash
-$ valente -cmd create -app appsample
+$ valente new appsample
 $ cd appsample
 $ go get
 $ go build
