@@ -45,7 +45,7 @@ func loginOk(ws *websocket.Conn, app *valente.App, params []string) {
 	}
 
 	if user == "admin" && pass == "admin" {
-		action.Html(ws, "loginName", "admin")
+		action.HTML(ws, "loginName", "admin")
 		app.GoTo("home", nil)
 	}
 }
@@ -56,7 +56,7 @@ func (form FormLogin) Initialize(ws *websocket.Conn) valente.Form {
 
 	f := form.AddEventHandler("loginOk", loginOk)
 
-	action.Html(ws, "content", htmlForm)
+	action.HTML(ws, "content", htmlForm)
 
 	return f
 }

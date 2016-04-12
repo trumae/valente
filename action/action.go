@@ -35,8 +35,8 @@ func Replace(ws *websocket.Conn, target, content string) error {
 	return websocket.Message.Send(ws, js)
 }
 
-//Replace target with new content
-func Html(ws *websocket.Conn, target, content string) error {
+//HTML replace target with new content
+func HTML(ws *websocket.Conn, target, content string) error {
 	c := strings.Replace(content, "\n", "\\n", -1)
 	c = strings.Replace(c, "\"", "\\\"", -1)
 	js := fmt.Sprintf("$( \"#%s\" ).html(\"%s\");", target, c)
@@ -105,6 +105,7 @@ func Wire(ws *websocket.Conn, target, event, act string) error {
 	return errNotImplemented
 }
 
+//SendEvent send an event to server
 func SendEvent(ws *websocket.Conn, event string) error {
 	js := fmt.Sprintf("sendEvent('%s');", event)
 	err := websocket.Message.Send(ws, js)
@@ -115,6 +116,7 @@ func SendEvent(ws *websocket.Conn, event string) error {
 	return nil
 }
 
+//Alert show alert message in browser
 func Alert(ws *websocket.Conn, message string) error {
 	js := fmt.Sprintf("alert('%s');", message)
 	err := websocket.Message.Send(ws, js)

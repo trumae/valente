@@ -21,7 +21,7 @@ type FormHome struct {
 func (form FormHome) Initialize(ws *websocket.Conn) valente.Form {
 	log.Println("FormHome Initialize")
 
-	action.Html(ws, "content", htmlFormHome)
+	action.HTML(ws, "content", htmlFormHome)
 
 	return form
 }

@@ -15,8 +15,11 @@ const (
 )
 
 var (
-	ProtocolError = errors.New("Protocol Error")
-	EOFWSError    = errors.New("Protocol Error")
+	//ErrProtocol is an error of WS Valente protocol
+	ErrProtocol = errors.New("Protocol Error")
+
+	//ErrEOFWS end of file of WS
+	ErrEOFWS = errors.New("EOF Error")
 )
 
 //HandlerFunc is a function of handle an event received into websocket.Conn
@@ -52,7 +55,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 		err := websocket.Message.Receive(ws, &msg)
 		if err != nil {
 			log.Println("Error on WS Receive", err)
-			return EOFWSError
+			return ErrEOFWS
 		}
 		if msg == endofmessage {
 			break
@@ -63,7 +66,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 	log.Printf("currentForm = %v msgs = %v\n", app.CurrentForm, msgs)
 	if len(msgs) < 1 {
 		log.Println("Protocol error len(msgs) < 1", msgs)
-		return ProtocolError
+		return ErrProtocol
 	}
 
 	f, present := form.trans[msgs[0]]
@@ -81,6 +84,7 @@ func (form FormImpl) Initialize(ws *websocket.Conn) Form {
 	return form
 }
 
+//Render form start
 func (form FormImpl) Render(ws *websocket.Conn, app *App, params []string) error {
 	log.Println("FormImpl Render")
 	return nil
@@ -130,9 +134,9 @@ func (app *App) Run() {
 		if err != nil {
 			log.Println(err)
 			switch {
-			case err == ProtocolError:
+			case err == ErrProtocol:
 				continue
-			case err == EOFWSError:
+			case err == ErrEOFWS:
 				return
 			default:
 				continue
