@@ -26,6 +26,10 @@ function createWS() {
     eval(evt.data);
   }
 
+  ws.onclose = function () {
+    alert("Lost of server connection! Please try reload the page.");
+  }
+
   ws.onerror = function(error) {
     var reason;
     alert(event.code);
