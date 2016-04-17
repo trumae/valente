@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	path "path/filepath"
+	"strings"
 )
 
 func createForm(form string) {
@@ -25,7 +26,7 @@ func createForm(form string) {
 	}
 
 	buf := new(bytes.Buffer)
-	err = tmpl.Execute(buf, form)
+	err = tmpl.Execute(buf, strings.Title(form))
 	if err != nil {
 		panic(err)
 	}
