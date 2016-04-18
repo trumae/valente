@@ -1,6 +1,7 @@
 # valente - websocket for golang webapp
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
+[![Godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/trumae/valente)
 
 valente is an experiment with Golang webapp using WebSockets. There are similar solutions in another languages/platform:
 
