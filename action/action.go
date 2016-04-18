@@ -130,13 +130,6 @@ func Alert(ws *websocket.Conn, message string) error {
 //BlockUI block page interaction
 func BlockUI(ws *websocket.Conn) {
 	Exec(ws, "$.blockUI();")
-	/*	Exec(ws, "$.blockUI();ws.send('blocked');")
-
-		ret := ""
-		err := websocket.Message.Receive(ws, &ret)
-		if err != nil {
-			log.Println("ERROR blockUI", err)
-		}*/
 }
 
 //UnblockUI block page interaction
