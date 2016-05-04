@@ -29,7 +29,7 @@ func (form FormHome) Initialize(ws *websocket.Conn) valente.Form {
 	go func() {
 		i := 0
 		c := time.Tick(1 * time.Second)
-		for _ = range c {
+		for range c {
 			i = i + 1
 			err := action.HTML(ws, "count", strconv.Itoa(i))
 			if err != nil {
