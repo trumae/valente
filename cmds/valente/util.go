@@ -27,11 +27,13 @@ func copyFile(source string, dest string) (err error) {
 		sourceinfo, err := os.Stat(source)
 		if err != nil {
 			err = os.Chmod(dest, sourceinfo.Mode())
+			if err != nil {
+				return err
+			}
 		}
-
 	}
 
-	return
+	return nil
 }
 
 func copyDir(source string, dest string) (err error) {
