@@ -120,7 +120,7 @@ func (app *App) Run() {
 	app.Data = map[string]interface{}{}
 	go func() {
 		c := time.Tick(10 * time.Second)
-		for _ = range c {
+		for range c {
 			err := action.Exec(app.WS, "1 == 1;")
 			if err != nil {
 				log.Println("Error in connection probe", err)
