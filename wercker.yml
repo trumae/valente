@@ -40,7 +40,7 @@ build:
     - script:
         name: go build
         code: |
-          cd cmds/valente; go build 
+          go build ./... 
 
     # Test the project
     - script:
