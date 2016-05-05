@@ -30,6 +30,10 @@ build:
     - script:
         name: go get
         code: |
+          go get golang.org/x/net/websocket
+          go get github.com/labstack/echo
+          go get github.com/labstack/echo/engine/standard
+          go get github.com/labstack/echo/middleware
           cd cmds/valente; go get
 
     # Build the project
