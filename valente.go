@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/trumae/valente/action"
+	"github.com/trumae/valente/status"
 
 	"golang.org/x/net/websocket"
 )
@@ -57,6 +58,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 			log.Println("Error on WS Receive", err)
 			return ErrEOFWS
 		}
+		status.Status.ReceivedBytes += len(msg)
 		if msg == endofmessage {
 			break
 		} else {
@@ -108,7 +110,7 @@ func (app *App) GoTo(formName string, params []string) error {
 		if err != nil {
 			log.Println("Error on goto", err)
 		}
-		Status.Gotos++
+		status.Status.Gotos++
 		action.UnblockUI(app.WS)
 	} else {
 		log.Println("[ERROR] Form not registred", formName)
@@ -119,14 +121,14 @@ func (app *App) GoTo(formName string, params []string) error {
 //Run handle events
 func (app *App) Run() {
 	app.Data = map[string]interface{}{}
-	Status.OpenSessions++
+	status.Status.OpenSessions++
 	go func() {
 		c := time.Tick(10 * time.Second)
 		for range c {
 			err := action.Exec(app.WS, "1 == 1;")
 			if err != nil {
 				log.Println("Error in connection probe", err)
-				Status.ClosedSessions++
+				status.Status.ClosedSessions++
 				return
 			}
 		}
@@ -164,5 +166,5 @@ func (app *App) AddForm(name string, f Form) {
 }
 
 func init() {
-	Status.Started = time.Now()
+	status.Status.Started = time.Now()
 }

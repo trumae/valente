@@ -1,4 +1,4 @@
-package valente
+package status
 
 import (
 	"net/http"

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/trumae/valente/status"
+
 	"golang.org/x/net/websocket"
 )
 
@@ -14,7 +16,12 @@ var (
 
 // Exec execute the js code on WebBrowser
 func Exec(ws *websocket.Conn, js string) error {
-	return websocket.Message.Send(ws, js)
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
 }
 
 //Enable the target form field or button.
@@ -32,7 +39,13 @@ func Replace(ws *websocket.Conn, target, content string) error {
 	c := strings.Replace(content, "\n", "\\n", -1)
 	c = strings.Replace(c, "\"", "\\\"", -1)
 	js := fmt.Sprintf("$( \"#%s\" ).replaceWith(\"%s\");", target, c)
-	return websocket.Message.Send(ws, js)
+
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
 }
 
 //HTML replace target with new content
@@ -40,7 +53,13 @@ func HTML(ws *websocket.Conn, target, content string) error {
 	c := strings.Replace(content, "\n", "\\n", -1)
 	c = strings.Replace(c, "\"", "\\\"", -1)
 	js := fmt.Sprintf("$( \"#%s\" ).html(\"%s\");", target, c)
-	return websocket.Message.Send(ws, js)
+
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
 }
 
 //Remove target from the DOM
@@ -80,6 +99,7 @@ func Set(ws *websocket.Conn, target, value string) error {
 	if err != nil {
 		return err
 	}
+	status.Status.SendedBytes += len(js)
 	return nil
 }
 
@@ -87,6 +107,7 @@ func Set(ws *websocket.Conn, target, value string) error {
 func Get(ws *websocket.Conn, target string) (string, error) {
 	ret := ""
 	js := fmt.Sprintf("ws.send($('#%s').val());", target)
+	status.Status.SendedBytes += len(js)
 	err := websocket.Message.Send(ws, js)
 	if err != nil {
 		return "", err
@@ -96,6 +117,7 @@ func Get(ws *websocket.Conn, target string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	status.Status.ReceivedBytes += len(ret)
 
 	return ret, nil
 }
@@ -112,6 +134,7 @@ func SendEvent(ws *websocket.Conn, event string) error {
 	if err != nil {
 		return err
 	}
+	status.Status.SendedBytes += len(js)
 
 	return nil
 }
@@ -123,6 +146,7 @@ func Alert(ws *websocket.Conn, message string) error {
 	if err != nil {
 		return err
 	}
+	status.Status.SendedBytes += len(js)
 
 	return nil
 }

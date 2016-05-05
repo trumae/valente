@@ -9,7 +9,7 @@ import (
 
 	"github.com/dimiro1/banner"
 	"github.com/mattn/go-colorable"
-	"github.com/trumae/valente"
+	"github.com/trumae/valente/status"
 )
 
 const textBanner = `
@@ -24,11 +24,13 @@ GOOS: {{ .GOOS }}
 
 `
 
-func printStatus(status valente.StatusInfo) {
+func printStatus(status status.StatusInfo) {
 	fmt.Println("Started at:", status.Started)
 	fmt.Println("Open Sessions:", status.OpenSessions)
 	fmt.Println("Closed Sessions:", status.ClosedSessions)
 	fmt.Println("Goto between forms:", status.Gotos)
+	fmt.Println("Bytes Sended:", status.SendedBytes)
+	fmt.Println("Bytes Received:", status.ReceivedBytes)
 }
 
 func main() {
@@ -43,7 +45,7 @@ func main() {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	status := valente.StatusInfo{}
+	status := status.StatusInfo{}
 	json.Unmarshal(body, &status)
 
 	printStatus(status)
