@@ -124,6 +124,7 @@ func (app *App) Run() {
 			err := action.Exec(app.WS, "1 == 1;")
 			if err != nil {
 				log.Println("Error in connection probe", err)
+				Status.ClosedSessions++
 				return
 			}
 		}
@@ -148,6 +149,7 @@ func (app *App) Run() {
 //Initialize inits the App
 func (app *App) Initialize() {
 	log.Println("App Initialize")
+	Status.OpenSessions++
 }
 
 //AddForm add a new form to App
