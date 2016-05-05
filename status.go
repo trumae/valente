@@ -22,6 +22,7 @@ var (
 	Status StatusInfo
 )
 
+//ValenteStatusHandler handle a status request sending an json
 func ValenteStatusHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, Status)
 }

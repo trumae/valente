@@ -108,6 +108,7 @@ func (app *App) GoTo(formName string, params []string) error {
 		if err != nil {
 			log.Println("Error on goto", err)
 		}
+		Status.Gotos++
 		action.UnblockUI(app.WS)
 	} else {
 		log.Println("[ERROR] Form not registred", formName)
@@ -118,6 +119,7 @@ func (app *App) GoTo(formName string, params []string) error {
 //Run handle events
 func (app *App) Run() {
 	app.Data = map[string]interface{}{}
+	Status.OpenSessions++
 	go func() {
 		c := time.Tick(10 * time.Second)
 		for range c {
@@ -149,7 +151,6 @@ func (app *App) Run() {
 //Initialize inits the App
 func (app *App) Initialize() {
 	log.Println("App Initialize")
-	Status.OpenSessions++
 }
 
 //AddForm add a new form to App
@@ -160,4 +161,8 @@ func (app *App) AddForm(name string, f Form) {
 	}
 
 	app.Forms[name] = f
+}
+
+func init() {
+	Status.Started = time.Now()
 }
