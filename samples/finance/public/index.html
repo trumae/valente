@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Finance</title>
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet"
+          href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+
+
+    <link rel="stylesheet" href="/css/c.css" />
+    <link rel="stylesheet" href="/themes/p6.min.css" />
+    <link rel="stylesheet" href="/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="/css/jquery.mobile-1.4.5.min.css" >
+
+  </head>
+  <body>
+
+    <div data-role="page" class="my-page" id="pagina" data-theme="g">
+
+      <div id="cabecalho" data-role="header">
+        <h2>Finance</h2>
+      </div>
+
+        <div id="content" data-role="content">
+          <h1>Loading...</h1>
+        </div>
+      </div>
+
+      <div data-role="footer" data-position="fixed" >
+        <center>
+          <table><tr><td>Finance</td></tr>
+          </table>
+        </center>
+      </div>
+
+    </div>
+
+<script language="text/javascript">
+$(document).bind("mobileinit", function(){
+  $.mobile.ajaxEnabled = false;
+  $.mobile.loadingMessage = "Loading...";
+  $.mobile.defaultDialogTransition = 'none';
+  $.mobile.defaultPageTransition = 'none';
+  $.mobile.pageLoadErrorMessage = 'Erro na carga';
+});
+</script>
+
+<script src="/js/jquery-1.12.3.min.js"></script>
+<script src="/js/jquery.blockUI.min.js"></script>
+<script src="/js/jquery.mobile-1.4.5.min.js"></script>
+<script src="/js/app.js"></script>
+
+  </body>
+</html>
+
