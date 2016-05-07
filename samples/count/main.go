@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/samples/count/forms"
+	"github.com/trumae/valente/status"
 
 	"golang.org/x/net/websocket"
 )
@@ -37,7 +38,8 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Static("public"))
 
-	e.Get("/ws", standard.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
+	e.GET("/status", status.ValenteStatusHandler)
+	e.GET("/ws", standard.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		app := App{}
 		app.WS = ws
 		app.Initialize()
