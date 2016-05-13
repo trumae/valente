@@ -26,6 +26,12 @@ function createWS() {
     eval(evt.data);
   }
 
+  ws.onclose = function (){
+    alert("Lost server connection!");
+    $("#content").html("<a href='javascript:window.location=\"/\"' class='ui-btn'>Login again</a>");
+    $('#content').appendTo('.ui-page').trigger('create');
+  }
+
   ws.onerror = function(error) {
     var reason;
     alert(event.code);
