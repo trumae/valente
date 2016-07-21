@@ -176,4 +176,5 @@ func init() {
 	status.Status.Started = time.Now()
 	tablews = make([]*websocket.Conn, 0, 100)
 	wschannel = make(chan wsmessage)
+	go tableWSServer()
 }
