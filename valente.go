@@ -100,6 +100,12 @@ type App struct {
 	CurrentForm Form
 }
 
+//WebSocket set the WS value
+func (app *App) WebSocket(ws *websocket.Conn) {
+	app.WS = ws
+	PutWS(ws)
+}
+
 //GoTo replace the current form into app
 func (app *App) GoTo(formName string, params []string) error {
 	log.Println("App goto", formName)
@@ -129,6 +135,7 @@ func (app *App) Run() {
 			if err != nil {
 				log.Println("Error in connection probe", err)
 				status.Status.ClosedSessions++
+				DropWS(app.WS)
 				return
 			}
 		}
@@ -167,4 +174,6 @@ func (app *App) AddForm(name string, f Form) {
 
 func init() {
 	status.Status.Started = time.Now()
+	tablews = make([]*websocket.Conn, 0, 100)
+	wschannel = make(chan wsmessage)
 }
