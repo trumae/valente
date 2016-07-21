@@ -39,4 +39,12 @@ $ ./appsample
 
 Access http://localhost:8000/ with your browser for boilerplate demo.
 
+## Run Sample
 
+```bash
+$ cd samples/finance
+$ go get
+$ go build
+$ finance
+```
+Access http://localhost:8000/ with your browser and enjoy.

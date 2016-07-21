@@ -34,6 +34,7 @@ build:
           go get github.com/labstack/echo
           go get github.com/labstack/echo/engine/standard
           go get github.com/labstack/echo/middleware
+          go get github.com/FlashBoys/go-finance 
           cd cmds/valente; go get
 
     # Build the project
