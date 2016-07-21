@@ -45,7 +45,7 @@ func tableWSServer() {
 			tablews = append(tablews, msg.WS)
 
 		case msg.Command == GET:
-			table := []*websocket.Conn{}
+			table := make([]*websocket.Conn, len(tablews))
 			copy(table, tablews)
 			nmsg := wsmessage{Table: table}
 			wschannel <- nmsg
