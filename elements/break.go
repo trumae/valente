@@ -4,3 +4,7 @@ package elements
 type Break struct {
 	Base
 }
+
+func (b Break) String() string {
+	return "<br/>"
+}
