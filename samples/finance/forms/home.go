@@ -17,17 +17,20 @@ type FormHome struct {
 }
 
 func updateQuote(ws *websocket.Conn, symbol string) {
+	span := elements.Span{}
 	q, err := finance.GetQuote(symbol)
 	if err == nil {
 		val, _ := q.ChangeNominal.Float64()
 		if val < 0.0 {
-			action.HTML(ws, symbol, "<span style='color:#f00;'>"+q.LastTradePrice.String()+"</span>")
+			span.SetStyle("color", "#f00")
+			span.Text = q.LastTradePrice.String()
 		} else {
-			action.HTML(ws, symbol, q.LastTradePrice.String())
+			span.Text = q.LastTradePrice.String()
 		}
 	} else {
-		action.HTML(ws, symbol, "--")
+		span.Text = "--"
 	}
+	action.HTML(ws, symbol, span.String())
 	log.Println(q)
 }
 
