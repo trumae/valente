@@ -7,5 +7,5 @@ type HorizontalRule struct {
 
 //String implements element interface into HorizontalRule
 func (hr HorizontalRule) String() string {
-	return "<hr/>"
+	return "<hr" + hr.Attrs() + "/>"
 }
