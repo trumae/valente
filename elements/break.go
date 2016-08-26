@@ -7,5 +7,5 @@ type Break struct {
 
 //String return string tag for Break
 func (b Break) String() string {
-	return "<br/>"
+	return "<br" + b.Attrs() + "/>"
 }

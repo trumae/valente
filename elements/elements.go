@@ -1,5 +1,7 @@
 package elements
 
+import "strings"
+
 //Element is an interface for html components
 type Element interface {
 	String() string
@@ -9,7 +11,6 @@ type Element interface {
 type Base struct {
 	ID      string
 	Classes []string
-	Visible bool
 	Style   map[string]string
 }
 
@@ -31,6 +32,9 @@ func (base *Base) RemoveClass(class string) {
 
 //SetStyle set a style value for a key
 func (base *Base) SetStyle(key string, value string) {
+	if base.Style == nil {
+		base.Style = make(map[string]string)
+	}
 	base.Style[key] = value
 }
 
@@ -39,10 +43,23 @@ func (base *Base) RemoveStyle(key string) {
 	delete(base.Style, key)
 }
 
-//Types
-//Break
-//Image
-//Link
-//EmailLink
-//HorizontalRule
-//
+func (base Base) Attrs() string {
+	var ret string
+
+	//Classes
+	if len(base.Classes) != 0 {
+		ret += " class='"
+		ret += strings.Join(base.Classes, " ")
+		ret += "'"
+	}
+
+	//Style
+	if len(base.Style) != 0 {
+		ret += " style='"
+		for key, val := range base.Style {
+			ret += key + ":" + val + ";"
+		}
+		ret += "'"
+	}
+	return ret
+}
