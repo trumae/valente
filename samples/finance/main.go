@@ -41,7 +41,7 @@ func main() {
 	e.GET("/status", status.ValenteStatusHandler)
 	e.GET("/ws", standard.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
 		app := App{}
-		app.WS = ws
+		app.WebSocket(ws)
 		app.Initialize()
 		app.Run()
 	})))

@@ -7,30 +7,9 @@ import (
 	"github.com/FlashBoys/go-finance"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/action"
+	"github.com/trumae/valente/elements"
 	"golang.org/x/net/websocket"
 )
-
-const htmlFormHome = `
-<h3>Quotes</h3>
-<ul data-role="listview" data-inset="true">
-  <li>
-    <h2>Alphabet Inc.</h2>
-		<p class="ui-li-aside"><strong id="GOOG"></strong></p>
-  </li>
-  <li>
-    <h2>Apple Inc.</h2>
-		<p class="ui-li-aside"><strong id="AAPL"></strong></p>
-  </li>
-  <li>
-    <h2>Microsoft Inc.</h2>
-    <p class="ui-li-aside"><strong id="MSFT"></strong></p>
-  </li>
-  <li>
-    <h2>Facebook, Inc.</h2>
-    <p class="ui-li-aside"><strong id="FB"></strong></p>
-  </li>
-</ul>
-`
 
 //FormHome example
 type FormHome struct {
@@ -52,9 +31,32 @@ func updateQuote(ws *websocket.Conn, symbol string) {
 	log.Println(q)
 }
 
+func itemQuote(title, id string) elements.Element {
+	el := elements.ListItem{}
+	el.AddElement(elements.Heading2{Text: title})
+	pel := elements.Paragraph{Text: "-"}
+	pel.ID = id
+	pel.AddClass("ui-li-aside")
+	el.AddElement(pel)
+
+	return el
+}
+
 //Render the initial html form
 func (form FormHome) Render(ws *websocket.Conn, app *valente.App, params []string) error {
-	action.HTML(ws, "content", htmlFormHome)
+	root := elements.Panel{}
+	root.AddElement(elements.Heading3{Text: "Quotes"})
+
+	list := elements.List{}
+	list.SetData("data-role", "listview")
+	list.SetData("data-inset", "true")
+	list.AddElement(itemQuote("Alphabet Inc.", "GOOG"))
+	list.AddElement(itemQuote("Apple Inc.", "AAPL"))
+	list.AddElement(itemQuote("Microsoft Inc.", "MSFT"))
+	list.AddElement(itemQuote("Facebook Inc.", "FB"))
+	root.AddElement(list)
+
+	action.HTML(ws, "content", root.String())
 	action.Exec(ws, "$('#content').appendTo('.ui-page').trigger('create');")
 
 	go func() {

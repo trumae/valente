@@ -15,6 +15,7 @@ type Base struct {
 	ID      string
 	Classes []string
 	Style   map[string]string
+	Data    map[string]string
 }
 
 //AddClass add a new class string for element
@@ -46,6 +47,19 @@ func (base *Base) RemoveStyle(key string) {
 	delete(base.Style, key)
 }
 
+//SetData set a data value for a key
+func (base *Base) SetData(key string, value string) {
+	if base.Data == nil {
+		base.Data = make(map[string]string)
+	}
+	base.Data[key] = value
+}
+
+//RemoveData delete a value in Data map
+func (base *Base) RemoveData(key string) {
+	delete(base.Data, key)
+}
+
 //Attrs return string for ID, class info and style
 func (base Base) Attrs() string {
 	var ret string
@@ -74,6 +88,11 @@ func (base Base) Attrs() string {
 		}
 		ret += "'"
 	}
+
+	for dat, dval := range base.Data {
+		ret += " " + dat + "='" + dval + "'"
+	}
+
 	return ret
 }
 
