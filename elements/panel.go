@@ -10,6 +10,7 @@ type Panel struct {
 	HTMLEncode bool
 }
 
+//AddElement put a new element on Body
 func (panel *Panel) AddElement(el Element) {
 	panel.Body = append(panel.Body, el)
 }

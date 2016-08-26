@@ -43,8 +43,13 @@ func (base *Base) RemoveStyle(key string) {
 	delete(base.Style, key)
 }
 
+//Attrs return string for ID, class info and style
 func (base Base) Attrs() string {
 	var ret string
+
+	if base.ID != "" {
+		ret += " id='" + base.ID + "'"
+	}
 
 	//Classes
 	if len(base.Classes) != 0 {

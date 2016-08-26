@@ -46,6 +46,15 @@ func TestBreak(t *testing.T) {
 	if s != "<br class='class1' style='key:value;'/>" {
 		t.Error("Expected '<br class='class1' style='key:value;'/>', got", s)
 	}
+
+	br = Break{}
+	br.Base.ID = "idbreak"
+	br.SetStyle("key", "value")
+	br.AddClass("class1")
+	s = br.String()
+	if s != "<br id='idbreak' class='class1' style='key:value;'/>" {
+		t.Error("Expected '<br id='idbreak' class='class1' style='key:value;'/>', got", s)
+	}
 }
 
 func TestBreakElement(t *testing.T) {
