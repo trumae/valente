@@ -5,14 +5,9 @@ import "html"
 //Panel element produces an HTML div
 type Panel struct {
 	Base
-	Body       []Element
+	Container
 	Text       string
 	HTMLEncode bool
-}
-
-//AddElement put a new element on Body
-func (panel *Panel) AddElement(el Element) {
-	panel.Body = append(panel.Body, el)
 }
 
 //String emit text for Panel

@@ -5,14 +5,9 @@ import "html"
 //Span element produces an HTML span
 type Span struct {
 	Base
+	Container
 	Text       string
-	Body       []Element
 	HTMLEncode bool
-}
-
-//AddElement add new elemento on body
-func (span *Span) AddElement(el Element) {
-	span.Body = append(span.Body, el)
 }
 
 //String emit text for span

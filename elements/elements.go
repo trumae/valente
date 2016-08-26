@@ -1,6 +1,9 @@
 package elements
 
-import "strings"
+import (
+	"sort"
+	"strings"
+)
 
 //Element is an interface for html components
 type Element interface {
@@ -61,10 +64,25 @@ func (base Base) Attrs() string {
 	//Style
 	if len(base.Style) != 0 {
 		ret += " style='"
-		for key, val := range base.Style {
-			ret += key + ":" + val + ";"
+		var keys []string
+		for key, _ := range base.Style {
+			keys = append(keys, key)
+		}
+		sort.Strings(keys)
+		for _, val := range keys {
+			ret += val + ":" + base.Style[val] + ";"
 		}
 		ret += "'"
 	}
 	return ret
+}
+
+//Container is an base to elements with body
+type Container struct {
+	Body []Element
+}
+
+//AddElement put a new element on Body
+func (c *Container) AddElement(el Element) {
+	c.Body = append(c.Body, el)
 }
