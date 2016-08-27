@@ -71,6 +71,7 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 		return ErrProtocol
 	}
 
+	app.LastAccess = time.Now()
 	f, present := form.trans[msgs[0]]
 	if present {
 		f(ws, app, msgs)
@@ -98,6 +99,7 @@ type App struct {
 	Forms       map[string]Form
 	Data        map[string]interface{}
 	CurrentForm Form
+	LastAccess  time.Time
 }
 
 //WebSocket set the WS value
@@ -138,6 +140,7 @@ func (app *App) Run() {
 				DropWS(app.WS)
 				return
 			}
+			app.LastAccess = time.Now()
 		}
 	}()
 
