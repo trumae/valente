@@ -6,6 +6,9 @@ function sendEvent( evt ) {
   ws.send("___ENDOFMESSAGE___")
 }
 
+var idSession = "__empty__";
+var stateSession = 0; //0 -> init | 1 -> running
+
 function createWS() {
   var loc = window.location;
   var uri = 'ws:';
@@ -20,19 +23,36 @@ function createWS() {
 
   ws.onopen = function() {
     console.log('Connected')
+    stateSession = 0;  
   }
 
   ws.onmessage = function(evt) {
+    if (evt.data == "__GETSESSION__" && stateSession == 0) {
+      ws.send(idSession);
+      return;
+    }
+    if (stateSession == 0) {
+      idSession = evt.data;
+      stateSession = 1;
+      $.unblockUI();
+      return;
+    }
     eval(evt.data);
   }
 
   ws.onclose = function () {
-    alert("Lost of server connection! Please try reload the page.");
+    if (stateSession != 0) {
+       $.blockUI({ message: '<h1>Lost of server connection! Please Wait...</h1>' });
+    }
+    stateSession = 0;
+    setTimeout(function(){ 
+       ws = createWS();
+    }, 1000);
   }
 
   ws.onerror = function(error) {
     var reason;
-    alert(event.code);
+    ///alert(event.code);
     // See http://tools.ietf.org/html/rfc6455#section-7.4.1
     if (event.code == 1000)
       reason = "Normal closure, meaning that the purpose for which the connection was established has been fulfilled.";
@@ -75,10 +95,5 @@ $( document ).ready(function() {
     alert("Websocket is not supported by your browser");
     return;
   }
-/*
-  setInterval(function() {
-    ws.send('hello');
-  }, 1000);
-*/
 });
 
