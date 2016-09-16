@@ -10,7 +10,18 @@ type Link struct {
 	HTMLEncode bool
 	URL        string
 	NewWindow  bool
-	PostBack   string
+	PostBack   []string
+}
+
+func (l *Link) linkParams() string {
+	ret := "'" + l.PostBack[0] + "'"
+	for idx, val := range l.PostBack {
+		if idx == 0 {
+			continue
+		}
+		ret += ",'" + val + "'"
+	}
+	return ret
 }
 
 //String return a string with tag anchor
@@ -22,11 +33,11 @@ func (link Link) String() string {
 	if link.NewWindow {
 		ret += " target='_blank'"
 	}
-	if link.PostBack != "" {
+	if len(link.PostBack) > 0 {
 		if link.URL != "" {
-			ret += " onclick=\"javascript:sendEvent('" + link.PostBack + "')\""
+			ret += " onclick=\"javascript:sendEvent(" + link.linkParams() + ")\""
 		} else {
-			ret += " href=\"javascript:sendEvent('" + link.PostBack + "')\""
+			ret += " href=\"javascript:sendEvent(" + link.linkParams() + ")\""
 		}
 	}
 	ret += ">"

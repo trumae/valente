@@ -35,25 +35,31 @@ func TestLink(t *testing.T) {
 		t.Error("Expected '<a class='class1' href='http://github.com/trumae/valente' target='_blank'>valente</a>', got", s)
 	}
 
-	link = Link{Text: "valente", URL: "http://github.com/trumae/valente", NewWindow: true, PostBack: "back"}
+	link = Link{Text: "valente", URL: "http://github.com/trumae/valente", NewWindow: true, PostBack: []string{"back"}}
 	link.AddClass("class1")
 	s = link.String()
 	if s != "<a class='class1' href='http://github.com/trumae/valente' target='_blank' onclick=\"javascript:sendEvent('back')\">valente</a>" {
 		t.Error("Expected '<a class='class1' href='http://github.com/trumae/valente' target='_blank' onclick=\"javascript:sendEvent('back')\">valente</a>', got", s)
 	}
 
-	link = Link{Text: "valente", PostBack: "back"}
+	link = Link{Text: "valente", PostBack: []string{"back"}}
 	s = link.String()
 	if s != "<a href=\"javascript:sendEvent('back')\">valente</a>" {
 		t.Error("Expected '<a href=\"javascript:sendEvent('back')\">valente</a>', got", s)
 	}
 
-	link = Link{URL: "http://github.com/trumae/valente", NewWindow: true, PostBack: "back"}
+	link = Link{URL: "http://github.com/trumae/valente", NewWindow: true, PostBack: []string{"back"}}
 	link.AddClass("class1")
 	link.AddElement(Break{})
 	link.AddElement(HorizontalRule{})
 	s = link.String()
 	if s != "<a class='class1' href='http://github.com/trumae/valente' target='_blank' onclick=\"javascript:sendEvent('back')\"><br/><hr/></a>" {
 		t.Error("Expected '<a class='class1' href='http://github.com/trumae/valente' target='_blank' onclick=\"javascript:sendEvent('back')\"><br/><hr/></a>', got", s)
+	}
+
+	link = Link{Text: "valente", PostBack: []string{"back", "two"}}
+	s = link.String()
+	if s != "<a href=\"javascript:sendEvent('back','two')\">valente</a>" {
+		t.Error("Expected '<a href=\"javascript:sendEvent('back','two')\">valente</a>', got", s)
 	}
 }
