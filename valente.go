@@ -128,7 +128,9 @@ func (app *App) GoTo(formName string, params []string) error {
 
 //Run handle events
 func (app *App) Run() {
-	app.Data = map[string]interface{}{}
+	if app.Data == nil {
+		app.Data = map[string]interface{}{}
+	}
 	status.Status.OpenSessions++
 	go func() {
 		c := time.Tick(10 * time.Second)
