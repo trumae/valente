@@ -62,6 +62,30 @@ func HTML(ws *websocket.Conn, target, content string) error {
 	return err
 }
 
+//Hide the target
+func Hide(ws *websocket.Conn, target string, duration string) error {
+	js := fmt.Sprintf("$( \"#%s\" ).hide(\"%s\");", target, duration)
+
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
+}
+
+//Show the target
+func Show(ws *websocket.Conn, target string, duration string) error {
+	js := fmt.Sprintf("$( \"#%s\" ).show(\"%s\");", target, duration)
+
+	err := websocket.Message.Send(ws, js)
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
+}
+
 //Remove target from the DOM
 func Remove(ws *websocket.Conn, target string) error {
 	return errNotImplemented
