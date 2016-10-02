@@ -35,3 +35,32 @@ func TestButton(t *testing.T) {
 	}
 
 }
+
+func TestTextArea(t *testing.T) {
+	ta := TextArea{}
+	s := ta.String()
+	if s != "<textarea></textarea>" {
+		t.Error("Expected '<textarea></textares>', got", s)
+	}
+
+	ta = TextArea{Text: "Valente"}
+	s = ta.String()
+	if s != "<textarea>Valente</textarea>" {
+		t.Error("Expected '<textarea>Valente</textares>', got", s)
+	}
+
+	ta = TextArea{Text: "Valente"}
+	ta.SetData("rows", "10")
+	s = ta.String()
+	if s != "<textarea rows='10'>Valente</textarea>" {
+		t.Error("Expected '<textarea rows='10'>Valente</textarea>', got", s)
+	}
+
+	ta = TextArea{Text: "Valente"}
+	ta.SetData("rows", "10")
+	ta.SetData("cols", "40")
+	s = ta.String()
+	if s != "<textarea rows='10' cols='40'>Valente</textarea>" {
+		t.Error("Expected '<textarea rows='10' cols='40'>Valente</textarea>', got", s)
+	}
+}

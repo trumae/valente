@@ -25,3 +25,17 @@ func (btn Button) String() string {
 	ret += "</button>"
 	return ret
 }
+
+//TextArea element produces an HTML textarea
+type TextArea struct {
+	Base
+	Text string
+}
+
+//String return the string to textarea tag
+func (ta TextArea) String() string {
+	ret := "<textarea" + ta.Attrs() + ">"
+	ret += html.EscapeString(ta.Text)
+	ret += "</textarea>"
+	return ret
+}
