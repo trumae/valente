@@ -13,9 +13,9 @@ type Link struct {
 	PostBack   []string
 }
 
-func (l *Link) linkParams() string {
-	ret := "'" + l.PostBack[0] + "'"
-	for idx, val := range l.PostBack {
+func params(postback []string) string {
+	ret := "'" + postback[0] + "'"
+	for idx, val := range postback {
 		if idx == 0 {
 			continue
 		}
@@ -35,9 +35,9 @@ func (link Link) String() string {
 	}
 	if len(link.PostBack) > 0 {
 		if link.URL != "" {
-			ret += " onclick=\"javascript:sendEvent(" + link.linkParams() + ")\""
+			ret += " onclick=\"javascript:sendEvent(" + params(link.PostBack) + ")\""
 		} else {
-			ret += " href=\"javascript:sendEvent(" + link.linkParams() + ")\""
+			ret += " href=\"javascript:sendEvent(" + params(link.PostBack) + ")\""
 		}
 	}
 	ret += ">"
