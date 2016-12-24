@@ -7,14 +7,13 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
 	"github.com/satori/go.uuid"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/samples/finance/forms"
 	"github.com/trumae/valente/status"
 
-	"golang.org/x/net/websocket"
+	"github.com/gorilla/websocket"
 )
 
 //App is a Web Application representation
@@ -28,6 +27,8 @@ const gctime = 1
 var (
 	sessions map[string]*App
 	mutex    sync.Mutex
+
+	upgrader = websocket.Upgrader{}
 )
 
 //addiSession include a new app on sessions
@@ -84,20 +85,26 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.Static("public"))
+	e.Static("/", "public")
 
 	e.GET("/status", status.ValenteStatusHandler)
-	e.GET("/ws", standard.WrapHandler(websocket.Handler(func(ws *websocket.Conn) {
-		err := websocket.Message.Send(ws, "__GETSESSION__")
+	e.GET("/ws", func(c echo.Context) error {
+		ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 		if err != nil {
-			return
+			return err
+		}
+		defer ws.Close()
+
+		err = ws.WriteMessage(websocket.TextMessage, []byte("__GETSESSION__"))
+		if err != nil {
+			return err
 		}
 
-		idSession := ""
-		err = websocket.Message.Receive(ws, &idSession)
+		_, bid, err := ws.ReadMessage()
 		if err != nil {
-			return
+			return err
 		}
+		idSession := string(bid)
 
 		var app *App
 		app = getSession(idSession)
@@ -107,24 +114,25 @@ func main() {
 			app = &App{}
 			app.LastAccess = time.Now()
 			addSession(u1, app)
-			err := websocket.Message.Send(ws, u1)
+			err := ws.WriteMessage(websocket.TextMessage, []byte(u1))
 			if err != nil {
-				return
+				return err
 			}
 			app.WebSocket(ws)
 			app.Initialize()
 		} else {
 			app.LastAccess = time.Now()
 			log.Println("Reusing session", idSession)
-			err := websocket.Message.Send(ws, idSession)
+			err := ws.WriteMessage(websocket.TextMessage, []byte(idSession))
 			if err != nil {
-				return
+				return err
 			}
 			app.WebSocket(ws)
 		}
 		app.Run()
-	})))
+		return nil
+	})
 
 	log.Println("Server running")
-	e.Run(standard.New(":8000"))
+	e.Start(":8000")
 }

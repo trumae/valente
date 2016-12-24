@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/FlashBoys/go-finance"
+	"github.com/gorilla/websocket"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/action"
 	"github.com/trumae/valente/elements"
-	"golang.org/x/net/websocket"
 )
 
 //FormHome example

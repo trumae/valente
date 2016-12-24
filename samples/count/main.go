@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
 	"github.com/satori/go.uuid"
 	"github.com/trumae/valente"
@@ -86,7 +85,7 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.Static("public"))
+	e.Static("/", "public")
 
 	e.GET("/status", status.ValenteStatusHandler)
 	e.GET("/ws", func(c echo.Context) error {
@@ -96,14 +95,14 @@ func main() {
 		}
 		defer ws.Close()
 
-		err := ws.WriteMessage(websocket.TextMessage, []byte("__GETSESSION__"))
+		err = ws.WriteMessage(websocket.TextMessage, []byte("__GETSESSION__"))
 		if err != nil {
-			return
+			return err
 		}
 
-		_, bid, err = ws.ReadMessage()
+		_, bid, err := ws.ReadMessage()
 		if err != nil {
-			return
+			return err
 		}
 		idSession := string(bid)
 
@@ -117,7 +116,7 @@ func main() {
 			addSession(u1, app)
 			err := ws.WriteMessage(websocket.TextMessage, []byte(u1))
 			if err != nil {
-				return
+				return err
 			}
 			app.WebSocket(ws)
 			app.Initialize()
@@ -126,13 +125,15 @@ func main() {
 			log.Println("Reusing session", idSession)
 			err := ws.WriteMessage(websocket.TextMessage, []byte(idSession))
 			if err != nil {
-				return
+				return err
 			}
 			app.WebSocket(ws)
 		}
 		app.Run()
+
+		return nil
 	})
 
 	log.Println("Server running")
-	e.Run(standard.New(":8000"))
+	e.Start(":8000")
 }
