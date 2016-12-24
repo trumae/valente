@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gorilla/websocket"
 	"github.com/trumae/valente/status"
-
-	"golang.org/x/net/websocket"
 )
 
 var (
@@ -16,7 +15,7 @@ var (
 
 // Exec execute the js code on WebBrowser
 func Exec(ws *websocket.Conn, js string) error {
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -40,7 +39,7 @@ func Replace(ws *websocket.Conn, target, content string) error {
 	c = strings.Replace(c, "\"", "\\\"", -1)
 	js := fmt.Sprintf("$( \"#%s\" ).replaceWith(\"%s\");", target, c)
 
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -54,7 +53,7 @@ func HTML(ws *websocket.Conn, target, content string) error {
 	c = strings.Replace(c, "\"", "\\\"", -1)
 	js := fmt.Sprintf("$( \"#%s\" ).html(\"%s\");", target, c)
 
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -66,7 +65,7 @@ func HTML(ws *websocket.Conn, target, content string) error {
 func Hide(ws *websocket.Conn, target string, duration string) error {
 	js := fmt.Sprintf("$( \"#%s\" ).hide(\"%s\");", target, duration)
 
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -78,7 +77,7 @@ func Hide(ws *websocket.Conn, target string, duration string) error {
 func Show(ws *websocket.Conn, target string, duration string) error {
 	js := fmt.Sprintf("$( \"#%s\" ).show(\"%s\");", target, duration)
 
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -119,7 +118,7 @@ func Redirect(ws *websocket.Conn, url string) error {
 //Set update a form element (textbox, dropdown, checkbox, etc) to set text value of TargetID.
 func Set(ws *websocket.Conn, target, value string) error {
 	js := fmt.Sprintf("$('#%s').val('%s');", target, value)
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -132,15 +131,16 @@ func Get(ws *websocket.Conn, target string) (string, error) {
 	ret := ""
 	js := fmt.Sprintf("ws.send($('#%s').val());", target)
 	status.Status.SendedBytes += len(js)
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return "", err
 	}
 
-	err = websocket.Message.Receive(ws, &ret)
+	_, bret, err := ws.ReadMessage()
 	if err != nil {
 		return "", err
 	}
+	ret = string(bret)
 	status.Status.ReceivedBytes += len(ret)
 
 	return ret, nil
@@ -154,7 +154,7 @@ func Wire(ws *websocket.Conn, target, event, act string) error {
 //SendEvent send an event to server
 func SendEvent(ws *websocket.Conn, event string) error {
 	js := fmt.Sprintf("sendEvent('%s');", event)
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -166,7 +166,7 @@ func SendEvent(ws *websocket.Conn, event string) error {
 //Alert show alert message in browser
 func Alert(ws *websocket.Conn, message string) error {
 	js := fmt.Sprintf("alert('%s');", message)
-	err := websocket.Message.Send(ws, js)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
