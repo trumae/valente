@@ -8,7 +8,7 @@ import (
 	"github.com/trumae/valente/action"
 	"github.com/trumae/valente/status"
 
-	"golang.org/x/net/websocket"
+	"github.com/gorilla/websocket"
 )
 
 const (
@@ -52,12 +52,12 @@ func (form FormImpl) AddEventHandler(evt string, f HandlerFunc) Form {
 func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 	msgs := []string{}
 	for {
-		msg := ""
-		err := websocket.Message.Receive(ws, &msg)
+		_, bmsg, err := ws.ReadMessage()
 		if err != nil {
 			log.Println("Error on WS Receive", err)
 			return ErrEOFWS
 		}
+		msg := string(bmsg)
 		status.Status.ReceivedBytes += len(msg)
 		if msg == endofmessage {
 			break

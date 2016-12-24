@@ -3,7 +3,7 @@ package valente
 import (
 	"log"
 
-	"golang.org/x/net/websocket"
+	"github.com/gorilla/websocket"
 )
 
 var (

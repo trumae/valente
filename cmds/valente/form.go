@@ -41,7 +41,7 @@ import (
   "log"
   "github.com/trumae/valente"
   "github.com/trumae/valente/action"
-  "golang.org/x/net/websocket"
+	"github.com/gorilla/websocket"
 )
 
 //{{.}}Form struct

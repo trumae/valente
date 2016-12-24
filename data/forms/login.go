@@ -3,9 +3,10 @@ package forms
 import (
 	"log"
 
+	"github.com/gorilla/websocket"
+
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/action"
-	"golang.org/x/net/websocket"
 )
 
 const htmlForm = `
