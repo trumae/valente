@@ -14,12 +14,11 @@ const tplMainGo = `package main
 
 import (
    "log"
+	 "net/http"
    "runtime"
 	 "sync"
 	 "time"
 
-   "github.com/labstack/echo"
-   "github.com/labstack/echo/middleware"
 	 "github.com/satori/go.uuid"
    "github.com/trumae/valente"
    "github.com/trumae/valente/status"
@@ -93,28 +92,28 @@ func main() {
 		  }
 		}()
 
-    e := echo.New()
+		fs := http.FileServer(http.Dir("public"))
+		http.Handle("/", fs)
 
-    e.Use(middleware.Logger())
-    e.Use(middleware.Recover())
-    e.Static("/", "public")
-
-    e.GET("/status", status.ValenteStatusHandler)
-    e.GET("/ws", func(c echo.Context) error {
-        ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+    http.HandleFunc("/status", status.ValenteStatusHandler)
+    http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+        ws, err := upgrader.Upgrade(w, r, nil)
 	      if err != nil {
-	              return err
+					      log.Println(err)
+	              return 
 	      }
 	      defer ws.Close()
 
 	      err = ws.WriteMessage(websocket.TextMessage, []byte("__GETSESSION__"))
         if err != nil {
-                return err
+					      log.Println(err)
+	              return 
         }
 
         _, bid, err := ws.ReadMessage()
        if err != nil {
-                return err
+					      log.Println(err)
+	              return 
        }
        idSession := string(bid)
 
@@ -128,7 +127,8 @@ func main() {
                addSession(u1, app)
                err := ws.WriteMessage(websocket.TextMessage, []byte(u1))
                if err != nil {
-                      return err
+					         log.Println(err)
+	                 return 
                }
                app.WebSocket(ws)
                app.Initialize()
@@ -137,16 +137,16 @@ func main() {
                log.Println("Reusing session", idSession)
                err := ws.WriteMessage(websocket.TextMessage, []byte(idSession))
                if err != nil {
-                       return err
+					         log.Println(err)
+	                 return 
                }
                app.WebSocket(ws)
        }
        app.Run()
-	     return nil
     })
 
-		log.Println("Server running")
-    e.Start(":8000")
+		log.Println("Server running ...")
+    http.ListenAndServe(":8000", nil)
 }
 
 `
