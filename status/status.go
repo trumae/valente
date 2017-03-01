@@ -1,10 +1,11 @@
 package status
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"time"
-
-	"github.com/labstack/echo"
 )
 
 //StatusInfo represents info of app status
@@ -23,6 +24,13 @@ var (
 )
 
 //ValenteStatusHandler handle a status request sending an json
-func ValenteStatusHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, Status)
+func ValenteStatusHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := json.Marshal(Status)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintln(w, string(b))
 }
