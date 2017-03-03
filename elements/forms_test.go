@@ -64,13 +64,29 @@ func TestInputText(t *testing.T) {
 	if s != "<input type='text' value='Valente' class='class1' data1='10' data2='20'/>" {
 		t.Error("Expected '<input type='text' value='Valente' class='class1' data1='10' data2='20'/>', got", s)
 	}
+}
 
-	ta = InputText{Value: "Valente"}
+func TestInputPassword(t *testing.T) {
+	ta := InputPassword{}
+	s := ta.String()
+	if s != "<input type='password'/>" {
+		t.Error("Expected '<input type='password'/>', got", s)
+	}
+
+	ta = InputPassword{}
+	ta.SetData("data1", "10")
+	s = ta.String()
+	if s != "<input type='password' data1='10'/>" {
+		t.Error("Expected '<input type='password' data1='10'/>', got", s)
+	}
+
+	ta = InputPassword{}
 	ta.SetData("data1", "10")
 	ta.SetData("data2", "20")
+	ta.AddClass("class1")
 	s = ta.String()
-	if s != "<input type='text' value='Valente' data1='10' data2='20'/>" {
-		t.Error("Expected '<input type='text' value='Valente' data1='10' data2='20'/>', got", s)
+	if s != "<input type='password' class='class1' data1='10' data2='20'/>" {
+		t.Error("Expected '<input type='password' class='class1' data1='10' data2='20'/>', got", s)
 	}
 }
 
@@ -98,7 +114,7 @@ func TestTextArea(t *testing.T) {
 	ta.SetData("rows", "10")
 	ta.SetData("cols", "40")
 	s = ta.String()
-	if s != "<textarea rows='10' cols='40'>Valente</textarea>" {
-		t.Error("Expected '<textarea rows='10' cols='40'>Valente</textarea>', got", s)
+	if s != "<textarea cols='40' rows='10'>Valente</textarea>" {
+		t.Error("Expected '<textarea cols='40' rows='10'>Valente</textarea>', got", s)
 	}
 }

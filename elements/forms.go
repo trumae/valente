@@ -40,6 +40,18 @@ func (text InputText) String() string {
 	return ret
 }
 
+//InputPassword element produces an HTML password input
+type InputPassword struct {
+	Base
+}
+
+//String return a string with input password
+func (pass InputPassword) String() string {
+	ret := "<input type='password'"
+	ret += pass.Attrs() + "/>"
+	return ret
+}
+
 //TextArea element produces an HTML textarea
 type TextArea struct {
 	Base
