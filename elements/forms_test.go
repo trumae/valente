@@ -36,6 +36,44 @@ func TestButton(t *testing.T) {
 
 }
 
+func TestInputText(t *testing.T) {
+	ta := InputText{}
+	s := ta.String()
+	if s != "<input type='text' value=''/>" {
+		t.Error("Expected '<input type='text' value=''/>', got", s)
+	}
+
+	ta = InputText{Value: "Valente"}
+	s = ta.String()
+	if s != "<input type='text' value='Valente'/>" {
+		t.Error("Expected '<input type='text' value='Valente'/>', got", s)
+	}
+
+	ta = InputText{Value: "Valente"}
+	ta.SetData("data1", "10")
+	s = ta.String()
+	if s != "<input type='text' value='Valente' data1='10'/>" {
+		t.Error("Expected '<input type='text' value='Valente' data1='10'/>', got", s)
+	}
+
+	ta = InputText{Value: "Valente"}
+	ta.SetData("data1", "10")
+	ta.SetData("data2", "20")
+	ta.AddClass("class1")
+	s = ta.String()
+	if s != "<input type='text' value='Valente' class='class1' data1='10' data2='20'/>" {
+		t.Error("Expected '<input type='text' value='Valente' class='class1' data1='10' data2='20'/>', got", s)
+	}
+
+	ta = InputText{Value: "Valente"}
+	ta.SetData("data1", "10")
+	ta.SetData("data2", "20")
+	s = ta.String()
+	if s != "<input type='text' value='Valente' data1='10' data2='20'/>" {
+		t.Error("Expected '<input type='text' value='Valente' data1='10' data2='20'/>', got", s)
+	}
+}
+
 func TestTextArea(t *testing.T) {
 	ta := TextArea{}
 	s := ta.String()
