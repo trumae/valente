@@ -26,6 +26,20 @@ func (btn Button) String() string {
 	return ret
 }
 
+//InputText element produces an HTML text input
+type InputText struct {
+	Base
+	Value string
+}
+
+//String return a string with input text
+func (text InputText) String() string {
+	ret := "<input type='text' "
+	ret += "value='" + html.EscapeString(text.Value) + "'"
+	ret += text.Attrs() + "/>"
+	return ret
+}
+
 //TextArea element produces an HTML textarea
 type TextArea struct {
 	Base
