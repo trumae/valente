@@ -44,12 +44,12 @@ func (sl *Sparkline) RemoveOption(key string) {
 //String return string tag for Sparkline
 func (spark Sparkline) String() string {
 
-	u1 := uuid.NewV4().String()[0:8]
-	ret := "<script type='text/javascript' src='"
-	ret += "https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"
-	ret += "'></script>"
+	if spark.ID == "" {
+		u1 := uuid.NewV4().String()[0:8]
+		spark.ID = u1
+	}
 
-	ret += fmt.Sprintf("<span id='%s'>Loading...</span>", u1)
+	ret := fmt.Sprintf("<span id='%s'>...</span>", spark.ID)
 
 	svalues := "[]"
 	if spark.Values != nil {
@@ -74,7 +74,11 @@ func (spark Sparkline) String() string {
 	}
 
 	ret += "<script>"
-	ret += fmt.Sprintf("$('#%s').sparkline(%s,%s);", u1, svalues, soptions)
+	ret += "loadScript('"
+	ret += "https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"
+	ret += "', function() {"
+	ret += fmt.Sprintf("$('#%s').sparkline(%s,%s);", spark.ID, svalues, soptions)
+	ret += "});"
 	ret += "</script>"
 	return ret
 }
