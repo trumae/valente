@@ -89,8 +89,13 @@ func (base Base) Attrs() string {
 		ret += "'"
 	}
 
-	for dat, dval := range base.Data {
-		ret += " " + dat + "='" + dval + "'"
+	var keys []string
+	for key, _ := range base.Data {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		ret += " " + key + "='" + base.Data[key] + "'"
 	}
 
 	return ret
