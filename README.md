@@ -48,3 +48,7 @@ $ go build
 $ finance
 ```
 Access http://localhost:8000/ with your browser and enjoy.
+
+![Alt text](https://cloud.githubusercontent.com/assets/122902/23583716/ecf0084c-012a-11e7-9efd-9620b113f5bd.gif "tty use")
+
+
