@@ -3,6 +3,7 @@ package valente
 import (
 	"errors"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/trumae/valente/action"
@@ -21,6 +22,9 @@ var (
 
 	//ErrEOFWS end of file of WS
 	ErrEOFWS = errors.New("EOF Error")
+
+	//MutexLastAccess for exclusive access in LastAccess Apps field
+	MutexLastAccess sync.Mutex = sync.Mutex{}
 )
 
 //HandlerFunc is a function of handle an event received into websocket.Conn
@@ -71,7 +75,10 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 		return ErrProtocol
 	}
 
+	MutexLastAccess.Lock()
 	app.LastAccess = time.Now()
+	MutexLastAccess.Unlock()
+
 	f, present := form.trans[msgs[0]]
 	if present {
 		f(ws, app, msgs)
@@ -142,7 +149,9 @@ func (app *App) Run() {
 				DropWS(app.WS)
 				return
 			}
+			MutexLastAccess.Lock()
 			app.LastAccess = time.Now()
+			MutexLastAccess.Unlock()
 		}
 	}()
 

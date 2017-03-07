@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"runtime"
-	"sync"
 	"time"
 
 	"github.com/satori/go.uuid"
@@ -25,15 +24,14 @@ const gctime = 1
 
 var (
 	sessions map[string]*App
-	mutex    sync.Mutex
 
 	upgrader = websocket.Upgrader{}
 )
 
 //addiSession include a new app on sessions
 func addSession(key string, app *App) {
-	mutex.Lock()
-	defer mutex.Unlock()
+	valente.MutexLastAccess.Lock()
+	defer valente.MutexLastAccess.Unlock()
 
 	sessions[key] = app
 }
@@ -44,8 +42,8 @@ func getSession(key string) *App {
 }
 
 func gcStepSession() {
-	mutex.Lock()
-	defer mutex.Unlock()
+	valente.MutexLastAccess.Lock()
+	defer valente.MutexLastAccess.Unlock()
 
 	now := time.Now().Unix()
 	for key, app := range sessions {
@@ -71,7 +69,6 @@ func main() {
 
 	log.Println("Init sessions")
 	sessions = make(map[string]*App)
-	mutex = sync.Mutex{}
 
 	go func() {
 		for {
