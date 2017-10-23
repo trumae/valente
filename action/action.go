@@ -115,6 +115,28 @@ func Redirect(ws *websocket.Conn, url string) error {
 	return errNotImplemented
 }
 
+//AddClass add a class for an element
+func AddClass(ws *websocket.Conn, target, class string) error {
+	js := fmt.Sprintf("$('#%s').addClass('%s');", target, class)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return nil
+}
+
+//RemoveClass add a class for an element
+func RemoveClass(ws *websocket.Conn, target, class string) error {
+	js := fmt.Sprintf("$('#%s').removeClass('%s');", target, class)
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return nil
+}
+
 //Set update a form element (textbox, dropdown, checkbox, etc) to set text value of TargetID.
 func Set(ws *websocket.Conn, target, value string) error {
 	js := fmt.Sprintf("$('#%s').val('%s');", target, value)
