@@ -132,20 +132,20 @@ func (app *App) Run() {
 		app.Data = map[string]interface{}{}
 	}
 	status.Status.OpenSessions++
-	go func() {
-		c := time.Tick(10 * time.Second)
-		for range c {
-			err := action.Exec(app.WS, "1 == 1;")
-			if err != nil {
-				log.Println("Error in connection probe", err)
-				status.Status.ClosedSessions++
-				DropWS(app.WS)
-				return
+	/*	go func() {
+			c := time.Tick(10 * time.Second)
+			for range c {
+				err := action.Exec(app.WS, "1 == 1;")
+				if err != nil {
+					log.Println("Error in connection probe", err)
+					status.Status.ClosedSessions++
+					DropWS(app.WS)
+					return
+				}
+				app.LastAccess = time.Now()
 			}
-			app.LastAccess = time.Now()
-		}
-	}()
-
+		}()
+	*/
 	for {
 		err := app.CurrentForm.Run(app.WS, app)
 		if err != nil {
