@@ -197,9 +197,13 @@ func Alert(ws *websocket.Conn, message string) error {
 	return nil
 }
 
+var (
+	BlockMessage = "<h2>Please, wait...</h2>"
+)
+
 //BlockUI block page interaction
 func BlockUI(ws *websocket.Conn) {
-	Exec(ws, "$.blockUI();")
+	Exec(ws, fmt.Sprintf("$.blockUI({ message: '%s' });", BlockMessage))
 }
 
 //UnblockUI block page interaction
