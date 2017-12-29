@@ -10,6 +10,15 @@ type Element interface {
 	String() string
 }
 
+type RawElement struct {
+	Raw string
+}
+
+//String emit html text for RawElement
+func (raw *RawElement) String() string {
+	return raw.Raw
+}
+
 //Base is an type base for all elements. This means that all Elements can use the attributes listed below.
 type Base struct {
 	ID      string

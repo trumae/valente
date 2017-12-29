@@ -1,6 +1,10 @@
 package elements
 
-import "github.com/trumae/valente/elements"
+import (
+	"fmt"
+
+	"github.com/trumae/valente/elements"
+)
 
 //Form element produces an HTML form element (<form>)
 type Form struct {
@@ -108,4 +112,30 @@ func NewInputPasswordRow(id, label, value string) *Row {
 	row.AddElement(div)
 
 	return row
+}
+
+//NewInputSelectRow return an input select element to use on form
+func NewInputSelectRow(id, label, value string, options []string, optionsText []string) *elements.RawElement {
+	soptions := ""
+
+	for i, option := range options {
+		soptions += fmt.Sprintf("<option id='op%s' value='%s'>%s</option>",
+			option, option, optionsText[i])
+	}
+
+	chtml := `<div class="row">
+	      <div class="input-field col s12">
+	        <select id="%s">
+                  %s
+	        </select>
+	        <label for="%s">%s</label>
+	      </div>
+	    </div>`
+
+	html := fmt.Sprintf(chtml, id, soptions, id, label)
+
+	raw := elements.RawElement{
+		Raw: html,
+	}
+	return &raw
 }
