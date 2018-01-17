@@ -45,8 +45,12 @@ func (sl *Sparkline) RemoveOption(key string) {
 func (spark Sparkline) String() string {
 
 	if spark.ID == "" {
-		u1 := uuid.NewV4().String()[0:8]
-		spark.ID = u1
+		u1, err := uuid.NewV4()
+		if err != nil {
+			spark.ID = "spartline1"
+		} else {
+			spark.ID = u1.String()[0:8]
+		}
 	}
 
 	ret := fmt.Sprintf("<span id='%s'>...</span>", spark.ID)
