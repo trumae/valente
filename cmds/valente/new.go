@@ -120,14 +120,19 @@ func main() {
        var app *App
        app = getSession(idSession)
        if app == nil {
-               u1 := uuid.NewV4().String()
+               su1, err := uuid.NewV4()
+	       if err != nil {
+			 log.Println(err)
+	                 return 
+	       }
+	       u1 := su1.String()
                log.Println("New session", u1)
                app = &App{}
                app.LastAccess = time.Now()
                addSession(u1, app)
-               err := ws.WriteMessage(websocket.TextMessage, []byte(u1))
+               err = ws.WriteMessage(websocket.TextMessage, []byte(u1))
                if err != nil {
-					         log.Println(err)
+			 log.Println(err)
 	                 return 
                }
                app.WebSocket(ws)
