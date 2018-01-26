@@ -4,6 +4,7 @@
 [![Godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/trumae/valente)
 [![Go Report Card](https://goreportcard.com/badge/github.com/trumae/valente)](https://goreportcard.com/report/github.com/trumae/valente)
 [![wercker status](https://app.wercker.com/status/5a8ce77ffcb15c1e5271849db344fc12/s "wercker status")](https://app.wercker.com/project/bykey/5a8ce77ffcb15c1e5271849db344fc12)
+[![codecov](https://codecov.io/gh/trumae/valente/branch/master/graph/badge.svg)](https://codecov.io/gh/trumae/valente)
 
 valente is an experiment with Golang webapp using WebSockets. There are similar solutions in another languages/platform:
 
