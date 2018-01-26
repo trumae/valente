@@ -198,6 +198,7 @@ func Alert(ws *websocket.Conn, message string) error {
 }
 
 var (
+	//BlockMessage is the message showed in waiting time
 	BlockMessage = "<h2>Please, wait...</h2>"
 )
 

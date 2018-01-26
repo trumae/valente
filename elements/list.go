@@ -2,7 +2,7 @@ package elements
 
 import "html"
 
-//ListElement produces an HTML listitem element (<li>).
+//ListItem produces an HTML listitem element (<li>).
 type ListItem struct {
 	Base
 	Container

@@ -163,7 +163,7 @@ func createApp(name string) {
 	log.Println("gopath:", gopath)
 	if gopath == "" {
 		log.Println("[ERRO] $GOPATH not found")
-		log.Println("[HINT] Set $GOPATH in your environment vairables")
+		log.Println("[HINT] Set $GOPATH in your environment variables")
 		os.Exit(2)
 	}
 

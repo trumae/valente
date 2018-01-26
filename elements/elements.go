@@ -10,6 +10,7 @@ type Element interface {
 	String() string
 }
 
+//RawElement is an elementa to return raw html code
 type RawElement struct {
 	Raw string
 }
@@ -88,7 +89,7 @@ func (base Base) Attrs() string {
 	if len(base.Style) != 0 {
 		ret += " style='"
 		var keys []string
-		for key, _ := range base.Style {
+		for key := range base.Style {
 			keys = append(keys, key)
 		}
 		sort.Strings(keys)
@@ -99,7 +100,7 @@ func (base Base) Attrs() string {
 	}
 
 	var keys []string
-	for key, _ := range base.Data {
+	for key := range base.Data {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
