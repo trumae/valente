@@ -25,6 +25,9 @@ func NewImageCard(title, fimg, icon, textcontent string) ImageCard {
 
 	stitle := valente.Span{Text: title}
 	stitle.AddClass("card-title")
+	stitle.SetStyle("background-color", "#22222299")
+	stitle.SetStyle("padding", "3px")
+
 	card.image.AddElement(stitle)
 
 	if len(icon) != 0 {
