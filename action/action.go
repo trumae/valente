@@ -90,24 +90,32 @@ func Remove(ws *websocket.Conn, target string) error {
 	return errNotImplemented
 }
 
-//InsertTop Insert content at the top of target
-func InsertTop(ws *websocket.Conn, target, content string) error {
-	return errNotImplemented
+//Append concate content at target
+func Append(ws *websocket.Conn, target, content string) error {
+	c := strings.Replace(content, "\n", "\\n", -1)
+	c = strings.Replace(c, "\"", "\\\"", -1)
+	js := fmt.Sprintf("$( \"#%s\" ).append(\"%s\");", target, c)
+
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
 }
 
-//InsertBottom Insert content at the bottom of target
-func InsertBottom(ws *websocket.Conn, target, content string) error {
-	return errNotImplemented
-}
+//Prepend concate content at the begin of target
+func Prepend(ws *websocket.Conn, target, content string) error {
+	c := strings.Replace(content, "\n", "\\n", -1)
+	c = strings.Replace(c, "\"", "\\\"", -1)
+	js := fmt.Sprintf("$( \"#%s\" ).prepend(\"%s\");", target, c)
 
-//InsertBefore Insert content at the before of target
-func InsertBefore(ws *websocket.Conn, target, content string) error {
-	return errNotImplemented
-}
-
-//InsertAfter Insert content at the after of target
-func InsertAfter(ws *websocket.Conn, target, content string) error {
-	return errNotImplemented
+	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
+	if err != nil {
+		return err
+	}
+	status.Status.SendedBytes += len(js)
+	return err
 }
 
 //Redirect to url
