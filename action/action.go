@@ -147,7 +147,7 @@ func RemoveClass(ws *websocket.Conn, target, class string) error {
 
 //Set update a form element (textbox, dropdown, checkbox, etc) to set text value of TargetID.
 func Set(ws *websocket.Conn, target, value string) error {
-	js := fmt.Sprintf("$('#%s').val('%s');", target, value)
+	js := fmt.Sprintf("$('#%s').val(`%s`);", target, value)
 	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
