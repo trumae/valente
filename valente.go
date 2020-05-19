@@ -26,6 +26,7 @@ type HandlerFunc func(*action.WebSocket, *App, []string)
 
 //Form represents the unit of user interaction
 type Form interface {
+	Name() string
 	AddEventHandler(evt string, f HandlerFunc) Form
 	Run(ws *action.WebSocket, app *App) error
 	Initialize(ws *action.WebSocket) Form
@@ -34,8 +35,13 @@ type Form interface {
 
 //FormImpl its a simple Form
 type FormImpl struct {
-	Name  string
+	name  string
 	trans map[string]HandlerFunc
+}
+
+//Name return the name string
+func (form FormImpl) Name() string {
+	return form.name
 }
 
 //AddEventHandler add an f function to handle evt event
