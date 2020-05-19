@@ -8,9 +8,12 @@ import (
 )
 
 //Toast show toast message in browser
-func Toast(ws *websocket.Conn, message string, t uint) error {
+func Toast(ws *action.WebSocket, message string, t uint) error {
+	ws.Mutex.Lock()
+	defer ws.Mutex.Unlock()
+
 	js := fmt.Sprintf("Materialize.toast('%s', %d);", message, t)
-	err := ws.WriteMessage(websocket.TextMessage, []byte(js))
+	err := ws.WS.WriteMessage(websocket.TextMessage, []byte(js))
 	if err != nil {
 		return err
 	}
@@ -19,7 +22,7 @@ func Toast(ws *websocket.Conn, message string, t uint) error {
 }
 
 //AdjustInputLabels adjust sobreposition of labels into input texts
-func AdjustInputLabels(ws *websocket.Conn) error {
+func AdjustInputLabels(ws *action.WebSocket) error {
 	return action.Exec(ws, `
 	$("input:text").filter(function() {
 		return this.value != "";
@@ -31,7 +34,7 @@ func AdjustInputLabels(ws *websocket.Conn) error {
 }
 
 //SetupForm setup materialize
-func SetupForm(ws *websocket.Conn) error {
+func SetupForm(ws *action.WebSocket) error {
 	return action.Exec(ws, `
 $('select').material_select();
 

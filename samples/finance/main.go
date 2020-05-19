@@ -7,8 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 	"github.com/trumae/valente"
+	"github.com/trumae/valente/action"
 	"github.com/trumae/valente/samples/finance/forms"
 	"github.com/trumae/valente/status"
 
@@ -123,7 +124,7 @@ func main() {
 				log.Println(err)
 				return
 			}
-			app.WebSocket(ws)
+			app.WebSocket(&action.WebSocket{WS: ws})
 			app.Initialize()
 		} else {
 			app.LastAccess = time.Now()
@@ -133,7 +134,7 @@ func main() {
 				log.Println(err)
 				return
 			}
-			app.WebSocket(ws)
+			app.WebSocket(&action.WebSocket{WS: ws})
 		}
 		app.Run()
 	})

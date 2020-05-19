@@ -7,8 +7,6 @@ import (
 
 	"github.com/trumae/valente/action"
 	"github.com/trumae/valente/status"
-
-	"github.com/gorilla/websocket"
 )
 
 const (
@@ -24,18 +22,19 @@ var (
 )
 
 //HandlerFunc is a function of handle an event received into websocket.Conn
-type HandlerFunc func(*websocket.Conn, *App, []string)
+type HandlerFunc func(*action.WebSocket, *App, []string)
 
 //Form represents the unit of user interaction
 type Form interface {
 	AddEventHandler(evt string, f HandlerFunc) Form
-	Run(ws *websocket.Conn, app *App) error
-	Initialize(ws *websocket.Conn) Form
-	Render(ws *websocket.Conn, app *App, params []string) error
+	Run(ws *action.WebSocket, app *App) error
+	Initialize(ws *action.WebSocket) Form
+	Render(ws *action.WebSocket, app *App, params []string) error
 }
 
 //FormImpl its a simple Form
 type FormImpl struct {
+	Name  string
 	trans map[string]HandlerFunc
 }
 
@@ -49,10 +48,10 @@ func (form FormImpl) AddEventHandler(evt string, f HandlerFunc) Form {
 }
 
 //Run execs the form
-func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
+func (form FormImpl) Run(ws *action.WebSocket, app *App) error {
 	msgs := []string{}
 	for {
-		_, bmsg, err := ws.ReadMessage()
+		_, bmsg, err := ws.WS.ReadMessage()
 		if err != nil {
 			log.Println("Error on WS Receive", err)
 			return ErrEOFWS
@@ -82,20 +81,20 @@ func (form FormImpl) Run(ws *websocket.Conn, app *App) error {
 }
 
 //Initialize inits the form
-func (form FormImpl) Initialize(ws *websocket.Conn) Form {
+func (form FormImpl) Initialize(ws *action.WebSocket) Form {
 	log.Println("FormImpl Initialize")
 	return form
 }
 
 //Render form start
-func (form FormImpl) Render(ws *websocket.Conn, app *App, params []string) error {
+func (form FormImpl) Render(ws *action.WebSocket, app *App, params []string) error {
 	log.Println("FormImpl Render")
 	return nil
 }
 
 //App is a Web Application representation
 type App struct {
-	WS          *websocket.Conn
+	WS          *action.WebSocket
 	Forms       map[string]Form
 	Data        map[string]interface{}
 	CurrentForm Form
@@ -103,9 +102,8 @@ type App struct {
 }
 
 //WebSocket set the WS value
-func (app *App) WebSocket(ws *websocket.Conn) {
+func (app *App) WebSocket(ws *action.WebSocket) {
 	app.WS = ws
-	PutWS(ws)
 }
 
 //GoTo replace the current form into app
@@ -132,20 +130,7 @@ func (app *App) Run() {
 		app.Data = map[string]interface{}{}
 	}
 	status.Status.OpenSessions++
-	/*	go func() {
-			c := time.Tick(10 * time.Second)
-			for range c {
-				err := action.Exec(app.WS, "1 == 1;")
-				if err != nil {
-					log.Println("Error in connection probe", err)
-					status.Status.ClosedSessions++
-					DropWS(app.WS)
-					return
-				}
-				app.LastAccess = time.Now()
-			}
-		}()
-	*/
+
 	for {
 		err := app.CurrentForm.Run(app.WS, app)
 		if err != nil {
@@ -175,11 +160,4 @@ func (app *App) AddForm(name string, f Form) {
 	}
 
 	app.Forms[name] = f
-}
-
-func init() {
-	status.Status.Started = time.Now()
-	tablews = make([]*websocket.Conn, 0, 100)
-	wschannel = make(chan wsmessage)
-	go tableWSServer()
 }

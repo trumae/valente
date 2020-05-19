@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/FlashBoys/go-finance"
-	"github.com/gorilla/websocket"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/action"
 	"github.com/trumae/valente/elements"
@@ -16,7 +15,7 @@ type FormHome struct {
 	valente.FormImpl
 }
 
-func updateQuote(ws *websocket.Conn, symbol string) {
+func updateQuote(ws *action.WebSocket, symbol string) {
 	span := elements.Span{}
 	q, err := finance.GetQuote(symbol)
 	if err == nil {
@@ -46,7 +45,7 @@ func itemQuote(title, id string) elements.Element {
 }
 
 //Render the initial html form
-func (form FormHome) Render(ws *websocket.Conn, app *valente.App, params []string) error {
+func (form FormHome) Render(ws *action.WebSocket, app *valente.App, params []string) error {
 	root := elements.Panel{}
 	root.AddElement(elements.Heading3{Text: "Quotes"})
 
@@ -76,7 +75,7 @@ func (form FormHome) Render(ws *websocket.Conn, app *valente.App, params []strin
 }
 
 //Initialize inits the Home Form
-func (form FormHome) Initialize(ws *websocket.Conn) valente.Form {
+func (form FormHome) Initialize(ws *action.WebSocket) valente.Form {
 	log.Println("FormHome Initialize")
 
 	return form

@@ -3,7 +3,6 @@ package forms
 import (
 	"log"
 
-	"github.com/gorilla/websocket"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/action"
 )
@@ -31,7 +30,7 @@ type FormLogin struct {
 	valente.FormImpl
 }
 
-func loginOk(ws *websocket.Conn, app *valente.App, params []string) {
+func loginOk(ws *action.WebSocket, app *valente.App, params []string) {
 	log.Println("Handling loginOk")
 
 	user, err := action.Get(ws, "user")
@@ -51,7 +50,7 @@ func loginOk(ws *websocket.Conn, app *valente.App, params []string) {
 }
 
 //Initialize inits the login Form
-func (form FormLogin) Initialize(ws *websocket.Conn) valente.Form {
+func (form FormLogin) Initialize(ws *action.WebSocket) valente.Form {
 	log.Println("FormLogin Initialize")
 
 	f := form.AddEventHandler("loginOk", loginOk)

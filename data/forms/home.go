@@ -3,7 +3,6 @@ package forms
 import (
 	"log"
 
-	"github.com/gorilla/websocket"
 	"github.com/trumae/valente"
 	"github.com/trumae/valente/action"
 )
@@ -18,7 +17,7 @@ type FormHome struct {
 }
 
 //Initialize inits the Home Form
-func (form FormHome) Initialize(ws *websocket.Conn) valente.Form {
+func (form FormHome) Initialize(ws *action.WebSocket) valente.Form {
 	log.Println("FormHome Initialize")
 
 	action.HTML(ws, "content", htmlFormHome)
