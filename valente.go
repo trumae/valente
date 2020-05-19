@@ -35,13 +35,13 @@ type Form interface {
 
 //FormImpl its a simple Form
 type FormImpl struct {
-	name  string
+	FName string
 	trans map[string]HandlerFunc
 }
 
 //Name return the name string
 func (form FormImpl) Name() string {
-	return form.name
+	return form.FName
 }
 
 //AddEventHandler add an f function to handle evt event
