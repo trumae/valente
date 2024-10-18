@@ -4,7 +4,7 @@ require (
 	github.com/FlashBoys/go-finance v0.0.0-20180309025038-0868c4d21d2c
 	github.com/codegangsta/cli v1.20.0
 	github.com/dimiro1/banner v0.0.0-20161108151223-c2f858997d49
-	github.com/gorilla/websocket v1.4.0
+	github.com/gorilla/websocket v1.4.1
 	github.com/mattn/go-colorable v0.0.9
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
