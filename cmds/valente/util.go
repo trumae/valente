@@ -1,10 +1,12 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func copyFile(source string, dest string) (err error) {
@@ -24,12 +26,55 @@ func copyFile(source string, dest string) (err error) {
 
 	_, err = io.Copy(destfile, sourcefile)
 	if err == nil {
+		log.Println("Error copying file", err)
 		sourceinfo, err := os.Stat(source)
 		if err != nil {
 			err = os.Chmod(dest, sourceinfo.Mode())
 			if err != nil {
 				return err
 			}
+		}
+	}
+
+	return nil
+}
+
+func copyEmbedDir(f embed.FS, origin, target string) error {
+	if _, err := os.Stat(target); os.IsNotExist(err) {
+		if err := os.MkdirAll(target, os.ModePerm); err != nil {
+			err = fmt.Errorf("error creating directory: %v", err)
+			return err
+		}
+	}
+
+	files, err := f.ReadDir(origin)
+	if err != nil {
+		err = fmt.Errorf("error reading directory: %v", err)
+		return err
+	}
+
+	for _, file := range files {
+		sourceFileName := filepath.Join(origin, file.Name())
+		destFileName := filepath.Join(target, file.Name())
+
+		if file.IsDir() {
+			if err := copyEmbedDir(f, sourceFileName, destFileName); err != nil {
+				err = fmt.Errorf("error copying subdirectory: %v", err)
+				return err
+			}
+			continue
+		}
+
+		fileContent, err := f.ReadFile(sourceFileName)
+		if err != nil {
+			err = fmt.Errorf("error reading file: %v", err)
+			return err
+		}
+
+		if err := os.WriteFile(destFileName, fileContent, 0644); err != nil { // nolint: gosec
+			log.Printf("error os.WriteFile error: %v", err)
+			err = fmt.Errorf("error writing file: %w", err)
+			return err
 		}
 	}
 

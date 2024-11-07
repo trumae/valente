@@ -7,7 +7,8 @@ import (
 	"log"
 	"os"
 	path "path/filepath"
-	"strings"
+
+	"github.com/trumae/valente/data"
 )
 
 const tplMainGo = `package main
@@ -84,7 +85,7 @@ func main() {
     log.Println("Init sessions")
     sessions = make(map[string]*App)
     mutex = sync.Mutex{}
-	  
+
 	  go func() {
 		  for {
 		    time.Sleep(gctime * time.Second)
@@ -100,20 +101,20 @@ func main() {
         ws, err := upgrader.Upgrade(w, r, nil)
 	      if err != nil {
 					      log.Println(err)
-	              return 
+	              return
 	      }
 	      defer ws.Close()
 
 	      err = ws.WriteMessage(websocket.TextMessage, []byte("__GETSESSION__"))
         if err != nil {
 					      log.Println(err)
-	              return 
+	              return
         }
 
         _, bid, err := ws.ReadMessage()
        if err != nil {
 					      log.Println(err)
-	              return 
+	              return
        }
        idSession := string(bid)
 
@@ -123,7 +124,7 @@ func main() {
                su1, err := uuid.NewV4()
 	       if err != nil {
 			 log.Println(err)
-	                 return 
+	                 return
 	       }
 	       u1 := su1.String()
                log.Println("New session", u1)
@@ -133,7 +134,7 @@ func main() {
                err = ws.WriteMessage(websocket.TextMessage, []byte(u1))
                if err != nil {
 			 log.Println(err)
-	                 return 
+	                 return
                }
                app.WebSocket(ws)
                app.Initialize()
@@ -143,7 +144,7 @@ func main() {
                err := ws.WriteMessage(websocket.TextMessage, []byte(idSession))
                if err != nil {
 					         log.Println(err)
-	                 return 
+	                 return
                }
                app.WebSocket(ws)
        }
@@ -157,47 +158,9 @@ func main() {
 `
 
 func createApp(name string) {
-	curpath, _ := os.Getwd()
-	log.Println("current path:", curpath)
-	gopath := os.Getenv("GOPATH")
-	log.Println("gopath:", gopath)
-	if gopath == "" {
-		log.Println("[ERRO] $GOPATH not found")
-		log.Println("[HINT] Set $GOPATH in your environment variables")
-		os.Exit(2)
-	}
-
-	haspath := false
 	appsrcpath := ""
 
-	wgopath := path.SplitList(gopath)
-	for _, wg := range wgopath {
-
-		wg = path.Join(wg, "src")
-
-		if strings.HasPrefix(strings.ToLower(curpath), strings.ToLower(wg)) {
-			haspath = true
-			appsrcpath = wg
-			break
-		}
-
-		wg, _ = path.EvalSymlinks(wg)
-
-		if strings.HasPrefix(strings.ToLower(curpath), strings.ToLower(wg)) {
-			haspath = true
-			appsrcpath = wg
-			break
-		}
-
-	}
-
-	if !haspath {
-		log.Printf("[ERRO] Unable to create an application outside of $GOPATH%ssrc(%s%ssrc)\n", string(path.Separator), gopath, string(path.Separator))
-		log.Printf("[HINT] Change your work directory by `cd ($GOPATH%ssrc)`\n", string(path.Separator))
-		os.Exit(2)
-	}
-
-	apppath := path.Join(curpath, name)
+	apppath := name
 
 	if isExist(apppath) {
 		log.Printf("[ERRO] Path (%s) already exists\n", apppath)
@@ -214,12 +177,24 @@ func createApp(name string) {
 	log.Println("Creating application ...")
 
 	os.MkdirAll(apppath, 0755)
+	os.MkdirAll(apppath+string(path.Separator)+"public", 0755)
+	os.MkdirAll(apppath+string(path.Separator)+"forms", 0755)
+
 	fmt.Println(apppath + string(path.Separator))
 
-	copyDir(pathToValenteDataPublic, path.Join(apppath, "public"))
-	copyDir(pathToValenteDataForms, path.Join(apppath, "forms"))
+	fmt.Println(path.Join(apppath, "public"))
+	fmt.Println(path.Join(apppath, "forms"))
 
-	packageForms := path.Join(apppath[len(appsrcpath)+1:], "forms")
+	fmt.Println(pathToValenteDataPublic)
+	fmt.Println(pathToValenteDataForms)
+
+	copyEmbedDir(data.FS, "public", path.Join(apppath, "public"))
+	copyEmbedDir(data.FS, "forms", path.Join(apppath, "forms"))
+
+	//copyDir(pathToValenteDataPublic, path.Join(apppath, "public"))
+	//copyDir(pathToValenteDataForms, path.Join(apppath, "forms"))
+
+	packageForms := path.Join(apppath, "forms")
 
 	tmpl, err := template.New("forms").Parse(tplMainGo)
 	if err != nil {

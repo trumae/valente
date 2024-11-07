@@ -5,14 +5,14 @@ import (
 	"log"
 	"os"
 
-	"github.com/codegangsta/cli"
 	"github.com/dimiro1/banner"
 	"github.com/mattn/go-colorable"
+	"github.com/urfave/cli"
 )
 
 const textBanner = `
-__     __    _            _       
-\ \   / /_ _| | ___ _ __ | |_ ___ 
+__     __    _            _
+\ \   / /_ _| | ___ _ __ | |_ ___
  \ \ / / _' | |/ _ \ '_ \| __/ _ \
   \ V / (_| | |  __/ | | | ||  __/
    \_/ \__,_|_|\___|_| |_|\__\___|
